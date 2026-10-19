@@ -17,8 +17,8 @@ img{max-width:100%;height:auto}
 
 /* 頁首 */
 .hd{position:sticky;top:0;z-index:100;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.hd .wrap{display:flex;align-items:center;gap:14px;height:60px}
-.hd-logo{display:block;height:40px;aspect-ratio:3.2/1;background:url("img/hunglun-logo-company-light.webp") left center/contain no-repeat;flex:none}
+.hd .wrap{display:flex;align-items:center;gap:14px;height:68px;max-width:1280px}
+.hd-logo{display:block;height:48px;aspect-ratio:5.04/1;background:url("img/hunglun-logo-company-light.webp") left center/contain no-repeat;flex:none}
 :root[data-theme="dark"] .hd-logo{background-image:url("img/hunglun-logo-dark-header.webp")}
 .hd-nav{display:flex;gap:4px;margin-left:10px}
 .hd-nav a{position:relative;padding:8px 14px;font-size:.98rem;font-weight:500;color:var(--text-body);text-decoration:none;border-radius:8px;white-space:nowrap}
@@ -69,7 +69,7 @@ img{max-width:100%;height:auto}
 }
 @media (max-width:560px){
   .hd .wrap{gap:6px;height:auto;min-height:56px;flex-wrap:wrap;padding-top:6px;padding-bottom:6px}
-  .hd-logo{height:32px}
+  .hd-logo{height:38px}
   .hd-nav{order:5;width:100%;margin:0;overflow-x:auto}
   .hd-nav a[aria-current="page"]:after{bottom:-3px}
   .hero{padding:30px 0 22px}

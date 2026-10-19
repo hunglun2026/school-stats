@@ -145,41 +145,25 @@ window.SS = (function () {
   };
 
 
-  /* ---------- 未來推估 ----------
-     現有學生會逐年升級（這部分幾乎確定），只有「新生人數」要假設。三種情境：
-       持平：新生和今年一樣多
-       全國趨勢：新生每年依全國 6 歲在學人數近五年的年均變化增減
-       明顯減少：新生每年依「全國 5 歲在學人數相對 6 歲」的落差減少（下一屆已知比今年少） */
-  function rates() {
-    var n = {}; S.nat.age.forEach(function (r) {
-      if (r.y === S.latest) n[r.age] = (n[r.age] || 0) + r.n;
-    });
-    var six = {}; S.nat.age.forEach(function (r) { if (r.age === '6歲') six[r.y] = (six[r.y] || 0) + r.n; });
-    S.rate = {
-      flat: 0,
-      trend: Math.pow(six[S.latest] / six[S.latest - 5], 1 / 5) - 1,
-      drop: n['5歲'] / n['6歲'] - 1
-    };
-  }
-  S.SCEN = [
-    { k: 'flat', name: '新生持平' },
-    { k: 'trend', name: '依全國趨勢' },
-    { k: 'drop', name: '新生明顯減少' }
-  ];
+  /* ---------- 未來推估（世代銜接，與 tools/common.py 同一套算法）----------
+     現有學生逐年升級（幾乎確定）。新生人數 = 該校占全國新生的份額 × 預測的全國新生數：
+       國小：第 1、2 年用現在 5 歲、4 歲在學人數校正，第 3 年起延續全國一年級近 3 年趨勢
+       國中：七年級新生就是現在國小的各年級，六年內幾乎已知
+     回測（用過去預測已發生的學年度）：國小 1/2/3 年誤差約 2.3%/4.4%/7.2%，國中約 3.6%/6.9%/9.2% */
   S.HORIZON = 6;
-  // 回傳 {total:[k=0..6], floor:[k=0..6]}：total 含新生，floor 只算目前已在學的學生
-  S.project = function (s, r) {
+  // mode: 'cohort'＝世代銜接；'flat'＝新生和今年一樣多。回傳 {total:[第0..6年], floor:[...]}，floor 只算目前已在學的學生
+  S.project = function (s, mode) {
     var gr = s.lv === '國小' ? 6 : 3, g = [], i, k, j, tot = [], floor = [];
     for (i = 0; i < gr; i++) g.push(s.g[i * 2] + s.g[i * 2 + 1]);
-    var entrants = g[0];
+    var gf = S.gf[s.lv], useCohort = mode !== 'flat' && s.sh != null;
     for (k = 0; k <= S.HORIZON; k++) {
       var t = 0, f = 0;
       for (j = 1; j <= gr; j++) {
         var from = j - k;  // 今年的 from 年級，到第 k 年升到 j 年級
         if (from >= 1) { t += g[from - 1]; f += g[from - 1]; }
-        else t += entrants * Math.pow(1 + r, k - j + 1);
+        else t += useCohort ? s.sh * gf[k - j] : g[0];  // 第 k-j+1 年後的新生，gf 從第 1 年開始，索引是 k-j
       }
-      tot.push(Math.round(t)); floor.push(Math.round(f));
+      tot.push(Math.floor(t + 0.5)); floor.push(Math.floor(f + 0.5));
     }
     return { total: tot, floor: floor };
   };
@@ -189,6 +173,7 @@ window.SS = (function () {
     S.years = d.years; S.latest = d.latest; S.iL = d.years.indexOf(d.latest);
     S.built = d.built;
     S.schools = d.schools;
+    S.gf = d.gf;
     S.byId = {};
     S.futPending = true;
     d.schools.forEach(function (s) {
@@ -203,22 +188,21 @@ window.SS = (function () {
 
   // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
   S.summaries = function () {
-    if (!S._sum) S._sum = fetch('/summaries.json?v=10').then(function (r) { return r.json(); });
+    if (!S._sum) S._sum = fetch('/summaries.json?v=11').then(function (r) { return r.json(); });
     return S._sum;
   };
 
   S.fillFuture = function () {
-    if (!S.rate) return;
-    // 太小的學校（30 人以下）百分比跳動太大，不參與「未來減少最多」排序
-    S.schools.forEach(function (s) { var p = S.project(s, S.rate.trend).total; s.fut = s.cur >= 30 && s.g[0] + s.g[1] > 0 ? S.pct(p[3], p[0]) : null; });  // 沒有一年級的學校（只收高年級）減少是結構造成，也不排
+    // 太小的學校（30 人以下）百分比跳動太大，不參與「未來減少最多」排序；沒有一年級的學校（只收高年級）減少是結構造成，也不排
+    S.schools.forEach(function (s) { var p = S.project(s, 'cohort').total; s.fut = s.cur >= 30 && s.g[0] + s.g[1] > 0 ? S.pct(p[3], p[0]) : null; });
   };
 
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=5').then(function (r) { return r.json(); })];
-    if (page === 'national' || page === 'find' || page === 'map') need.push(fetch('/data.json?v=5').then(function (r) { return r.json(); }));
+    var need = [fetch('/schools.json?v=11').then(function (r) { return r.json(); })];
+    if (page === 'national') need.push(fetch('/data.json?v=11').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
-      prepare(res[0]); S.nat = res[1]; if (S.nat) { rates(); S.fillFuture(); }
+      prepare(res[0]); S.nat = res[1]; S.fillFuture();
       var el = S.$('built'); if (el) el.textContent = S.built;
       var hs = S.$('heroStats');
       if (hs) {

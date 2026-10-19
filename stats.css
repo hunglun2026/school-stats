@@ -198,3 +198,7 @@ code{background:var(--bg-soft);padding:2px 6px;border-radius:4px;word-break:brea
   .map-panel{position:static;max-width:none;margin-top:10px}
   .map-legend{grid-template-columns:1fr 1fr}
 }
+.sx-method ul{margin:6px 0 10px 1.2em}
+.sx-method li{margin:5px 0}
+.sx-method p{margin:8px 0}
+.mp-note{font-size:.78rem;color:#92400e;margin-top:4px}

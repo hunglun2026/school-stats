@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=5">
-<link rel="stylesheet" href="/stats.css?v=5">
+<link rel="stylesheet" href="/base.css?v=11">
+<link rel="stylesheet" href="/stats.css?v=11">
 <link rel="stylesheet" href="/vendor/leaflet.css?v=1">
 </head>
 <body class="sx" data-page="map">
@@ -36,6 +36,7 @@
       <a href="/area/">學校名錄</a>
     </nav>
     <span class="hd-sp"></span>
+    <a class="hd-link" href="/method/">算法說明</a>
     <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
     <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
     <button type="button" class="hd-btn" id="themeBtn" aria-label="切換深色或淺色模式">深色模式</button>
@@ -76,7 +77,7 @@
         <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>。</li>
         <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
         <li>地圖位置來自 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> 貢獻者（ODbL 授權），用校名、縣市與鄉鎮市區比對；比對不到的學校不會顯示在地圖上（目前 <span id="mapCover">--</span> 所有座標）。</li>
-        <li>顏色用 5 個等級區分，圓圈大小代表學生數；「未來 3 年推估」是依全國趨勢的簡單推估，不是預測結果。</li>
+        <li>顏色用 5 個等級區分，圓圈大小代表學生數；「未來 3 年推估」是世代銜接推估，不是裁併或減班的決定。</li>
         <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
         <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
       </ul>
@@ -109,7 +110,7 @@
 })();
 </script>
 <script src="/vendor/leaflet.js?v=1"></script>
-<script src="/core.js?v=5"></script>
-<script src="/map.js?v=5"></script>
+<script src="/core.js?v=11"></script>
+<script src="/map.js?v=11"></script>
 </body>
 </html>

@@ -178,23 +178,26 @@
 
   var PCOL = ['var(--c3)', 'var(--c2)', 'var(--c5)'];
   function projHtml(s) {
-    var sc = S.SCEN.map(function (x) { return { n: x.name, r: S.rate[x.k], p: S.project(s, S.rate[x.k]) }; });
+    var pc = S.project(s, 'cohort'), pf = S.project(s, 'flat');
     var cl = s.cl[S.iL], per = cl ? s.cur / cl : 0, end = S.latest + S.HORIZON;
-    var t = sc[1].p.total, last = t[S.HORIZON], fl3 = sc[0].p.floor[3];
+    var last = pc.total[S.HORIZON], f3 = pc.floor[3], h3 = pc.total[3];
     var classes = per ? Math.max(1, Math.round(last / per)) : null;
-    return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生會逐年升級，所以這一段幾乎確定；只有新生人數要假設，下面用三種情境。</p>' +
+    var err = s.lv === '國小' ? '約 2%、4%、7%' : '約 4%、7%、9%';
+    return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生逐年升級，這部分幾乎確定；新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中看現在的國小各年級），不是單純假設趨勢。</p>' +
       '<div class="sx-chart" id="pChart"></div><div class="sx-legend" id="pLegend"></div>' +
-      '<p class="sx-pnote">依全國趨勢（新生每年 ' + S.sgn(S.rate.trend * 100) + '）推估，<b>' + end + ' 學年度約 ' + fmt(last) + ' 人</b>' + (classes ? '，約 ' + classes + ' 班（以目前每班 ' + per.toFixed(1) + ' 人估）' : '') +
-      '，較今年 ' + S.chg(S.pct(last, s.cur)) + '。其中 ' + fmt(fl3) + ' 人是 3 年後（' + (S.latest + 3) + ' 學年度）仍在學的現有學生，其餘是之後入學的新生。</p>' +
-      '<p class="sub">這是用在學人數做的簡單推估，不含遷入遷出、學區調整、轉學與留級，也不代表任何裁併或減班決定。</p></div>';
+      '<p class="sx-pnote">推估 ' + (S.latest + 3) + ' 學年度約 <b>' + fmt(h3) + ' 人</b>（較今年 ' + S.chg(S.pct(h3, s.cur)) + '），' + end + ' 學年度約 <b>' + fmt(last) + ' 人</b>' + (classes ? '，約 ' + classes + ' 班（以目前每班 ' + per.toFixed(1) + ' 人估）' : '') +
+      '。其中 ' + fmt(f3) + ' 人是 ' + (S.latest + 3) + ' 學年度仍在學的現有學生。</p>' +
+      '<p class="sub">用過去資料回測，預測 1、2、3 年後的學校人數，平均誤差' + err + '。不含遷入遷出與學區調整，也不代表任何裁併或減班決定。<a href="/method/">算法說明</a></p></div>';
   }
   function drawProj(s) {
     var yrs = S.years.slice(), k;
     for (k = 1; k <= S.HORIZON; k++) yrs.push(S.latest + k);
     var pad = function (arr, from) { var o = []; for (var i = 0; i < yrs.length; i++) o.push(i < from ? null : arr[i - from]); return o; };
+    var pc = S.project(s, 'cohort'), pf = S.project(s, 'flat');
     var series = [{ name: '實際', color: 'var(--c1)', w: 2.8, vals: s.st.concat(new Array(S.HORIZON).fill(null)) },
-      { name: '已在學者', color: 'var(--muted)', dash: '2 4', vals: pad(S.project(s, 0).floor, S.iL) }];
-    S.SCEN.forEach(function (x, i) { series.push({ name: x.name, color: PCOL[i], dash: '6 4', vals: pad(S.project(s, S.rate[x.k]).total, S.iL) }); });
+      { name: '現有學生仍在學', color: 'var(--muted)', dash: '2 4', vals: pad(pc.floor, S.iL) },
+      { name: '若新生持平', color: 'var(--c4)', dash: '6 4', vals: pad(pf.total, S.iL) },
+      { name: '推估（世代銜接）', color: 'var(--c2)', w: 2.8, dash: '7 3', vals: pad(pc.total, S.iL) }];
     S.lineChart($('pChart'), { zero: true, years: yrs, series: series, futureFrom: S.iL + 1, label: s.n + '未來推估', valFmt: function (v) { return fmt(v) + ' 人'; } });
     $('pLegend').innerHTML = series.map(function (x) { return '<span><i style="background:' + x.color + '"></i>' + x.name + '</span>'; }).join('');
   }

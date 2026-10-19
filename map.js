@@ -22,6 +22,7 @@
       '<div class="mp-row"><span>' + S.latest + ' 學年度</span><b class="sx-num">' + fmt(s.cur) + ' 人</b></div>' +
       '<div class="mp-row"><span>近五年</span>' + S.chg(v5) + '</div>' +
       (vf != null ? '<div class="mp-row"><span>未來 3 年推估</span>' + S.chg(vf) + '</div>' : '') +
+      (coords[s.id][2] === 1 ? '<div class="mp-note">位置是所附設學校的校園，概略位置</div>' : coords[s.id][2] === 2 ? '<div class="mp-note">位置由校名相近的點推定</div>' : '') +
       '<div class="mp-links"><a href="/?s=' + s.id + '">互動詳情</a><a href="/school/' + s.id + '/">完整頁面</a>' +
       '<a href="https://www.google.com/maps/search/?api=1&query=' + mapQ + '" target="_blank" rel="noopener">Google 地圖</a></div></div>';
   }
@@ -37,7 +38,7 @@
       var b = bin(val(s));
       if (b == null) { nodata++; return; }
       counts[b]++; n++;
-      var c = coords[s.id];
+      var c = coords[s.id].slice(0, 2);
       bb.push(c);
       var m = L.circleMarker(c, { renderer: canvas, radius: radius(s.cur), color: '#ffffff', weight: .8, fillColor: BINS[b].c, fillOpacity: .85 })
         .bindPopup(function () { return popupHtml(s); }, { maxWidth: 280 }).addTo(layer);
@@ -81,8 +82,8 @@
     $('mResults').addEventListener('click', function (e) {
       var b = e.target.closest('[data-id]'); if (!b) return;
       var s = S.byId[b.dataset.id];
-      map.setView(coords[s.id], 16);
-      L.popup({ maxWidth: 280 }).setLatLng(coords[s.id]).setContent(popupHtml(s)).openOn(map);
+      map.setView(coords[s.id].slice(0, 2), 16);
+      L.popup({ maxWidth: 280 }).setLatLng(coords[s.id].slice(0, 2)).setContent(popupHtml(s)).openOn(map);
       $('mResults').innerHTML = '';
     });
   }
@@ -91,7 +92,7 @@
 
   S.mods.map = {
     init: function () {
-      fetch('/coords.json?v=9').then(function (r) { return r.json(); }).then(function (c) {
+      fetch('/coords.json?v=11').then(function (r) { return r.json(); }).then(function (c) {
         coords = c;
         var qs = S.query(); st.county = qs.c || ''; st.lv = qs.lv || ''; st.mode = qs.mode === 'fut' ? 'fut' : 'ch5';
         map = L.map('map', { zoomControl: true, preferCanvas: true }).setView([23.7, 120.95], 8);
@@ -105,8 +106,8 @@
         var bb = draw();
         if (st.county || st.lv) fit(bb);
         if (qs.s && S.byId[qs.s] && coords[qs.s]) {
-          var t = S.byId[qs.s]; map.setView(coords[t.id], 16);
-          L.popup({ maxWidth: 280 }).setLatLng(coords[t.id]).setContent(popupHtml(t)).openOn(map);
+          var t = S.byId[qs.s]; map.setView(coords[t.id].slice(0, 2), 16);
+          L.popup({ maxWidth: 280 }).setLatLng(coords[t.id].slice(0, 2)).setContent(popupHtml(t)).openOn(map);
         }
         $('mapCover').textContent = fmt(Object.keys(coords).length) + ' / ' + fmt(S.schools.length);
       }).catch(function () { $('mapSum').textContent = '座標資料載入失敗，請重新整理頁面。'; });

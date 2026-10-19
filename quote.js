@@ -62,7 +62,7 @@
       '<tr><td>班級數</td><td class="sx-num">' + (s.cl[S.iL] == null ? '無資料' : s.cl[S.iL]) + '</td><td>專任教師</td><td class="sx-num">' + (s.lv === '大專' ? '無資料' : fmt(s.t[0] + s.t[1])) + '</td></tr>' +
       '<tr><td>職員</td><td class="sx-num">' + (s.lv === '大專' ? '無資料' : fmt(s.sf ? s.sf[0] + s.sf[1] : 0)) + '</td><td>資料來源</td><td>教育部統計處</td></tr></tbody></table>' +
       '<h3>二、建議的授權範圍</h3>' + tbl +
-      '<ul><li>授權數就是實際要使用的人數，可以只開給教職員，不必全校一起買。</li><li>2025 年 10 月起已取消「每 4 個學生授權送 1 個教職員授權」，教職員人數要一併編列。</li><li>' + stuNote(s) + '</li><li>Google AI Pro for Education 是 Workspace for Education 的加購項目，Education Fundamentals、Standard、Plus 都可以加購，授權在管理主控台逐人指派。</li></ul>' +
+      '<ul><li>授權數就是實際要使用的人數，可以只開給教職員，不必全校一起買。</li><li>2025 年 10 月起已取消「每 4 個學生授權送 1 個教職員授權」，教職員人數要一併編列。</li><li>' + stuNote(s) + '</li><li>Google AI Pro for Education 是 Workspace for Education 的加購項目，學校需先有 Workspace for Education 方案（免費的 Education Fundamentals 或付費方案皆可，實際可訂購的版本以 Google 當期公告為準），授權在管理主控台逐人指派。</li></ul>' +
       '<h3>三、預算參考</h3>' + money +
       '<h3>四、建議的導入節奏</h3>' +
       '<ol><li><b>盤點情境：</b>先挑三到五個真實情境，例如公文改寫、家長通知、命題，授權買了沒人用是最常見的浪費。</li>' +

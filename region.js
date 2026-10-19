@@ -29,28 +29,34 @@
       .sort(function (a, b) { return (a.k === '區域未標示') - (b.k === '區域未標示') || b.cur - a.cur; });
     var dmax = Math.max.apply(null, ds.map(function (a) { return a.cur; }));
     $('regTitle').textContent = st.county + '各鄉鎮市區';
+    S.setQuery({ c: st.county, lv: st.lv });
     var cur = cs.filter(function (a) { return a.k === st.county; })[0];
     $('regSub').innerHTML = '共 ' + ds.length + ' 個區域、' + cur.n + ' 所學校、' + fmt(cur.cur) + ' 人。點一下區域，直接看那裡的學校。';
     $('regDistricts').innerHTML = ds.map(function (a) { return rowHtml(a, dmax, 'data-d="' + esc(a.k) + '"', false); }).join('');
   }
 
+  function link(c, d) {
+    var p = new URLSearchParams(); p.set('c', c); if (d) p.set('d', d); if (st.lv) p.set('lv', st.lv);
+    return '/?' + p.toString();
+  }
+
   S.mods.region = {
-    show: render,
     init: function () {
+      var qs = S.query(); st.lv = qs.lv || ''; st.county = qs.c || '';
+      function pressed() { document.querySelectorAll('[data-rlv]').forEach(function (o) { o.setAttribute('aria-pressed', o.dataset.rlv === st.lv); }); }
+      pressed();
       document.querySelectorAll('[data-rlv]').forEach(function (b) {
-        b.addEventListener('click', function () {
-          st.lv = b.dataset.rlv;
-          document.querySelectorAll('[data-rlv]').forEach(function (o) { o.setAttribute('aria-pressed', o === b); });
-          render();
-        });
+        b.addEventListener('click', function () { st.lv = b.dataset.rlv; pressed(); render(); });
       });
       $('regCounties').addEventListener('click', function (e) {
         var b = e.target.closest('[data-c]'); if (b) { st.county = b.dataset.c; render(); }
       });
       $('regDistricts').addEventListener('click', function (e) {
         var b = e.target.closest('[data-d]');
-        if (b) S.mods.find.goArea(st.county, b.dataset.d === '區域未標示' ? '' : b.dataset.d, st.lv);
+        if (b) location.href = link(st.county, b.dataset.d === '區域未標示' ? '' : b.dataset.d);
       });
+      $('regGo').addEventListener('click', function () { location.href = link(st.county, ''); });
+      render();
     }
   };
 })(window.SS);

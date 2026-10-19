@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var t=localStorage.getItem('hunglun-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<title>全國中小學人數區域排行｜縣市與鄉鎮市區｜鴻綸科技</title>
+<meta name="description" content="比較全國 22 縣市、各鄉鎮市區的國小與國中學生人數與近五年變化，點一個區域就能看那裡的每一所學校。">
+<link rel="canonical" href="https://school.hunglun.com/region/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="全國中小學人數區域排行｜縣市與鄉鎮市區｜鴻綸科技">
+<meta property="og:description" content="比較全國 22 縣市、各鄉鎮市區的國小與國中學生人數與近五年變化，點一個區域就能看那裡的每一所學校。">
+<meta property="og:url" content="https://school.hunglun.com/region/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css?v=4">
+<link rel="stylesheet" href="/stats.css?v=4">
+</head>
+<body class="sx" data-page="region">
+<a class="skip" href="#main">跳到主要內容</a>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="hd-logo" href="https://www.hunglun.com/" aria-label="鴻綸科技 Hunglun Technology"></a>
+    <nav class="hd-nav" aria-label="功能">
+      <a href="/">找學校</a>
+      <a href="/region/" aria-current="page">區域排行</a>
+      <a href="/national/">全國概況</a>
+    </nav>
+    <span class="hd-sp"></span>
+    <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
+    <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
+    <button type="button" class="hd-btn" id="themeBtn" aria-label="切換深色或淺色模式">深色模式</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="pg-head">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="麵包屑"><a href="/">找學校</a> ／ 區域排行</nav>
+    <h1>區域排行</h1>
+    <p class="lead">哪個縣市、哪個區的學生變少了？左邊選縣市，右邊看它的鄉鎮市區，點一個區域就直接看那裡的學校。</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="sx-controls">
+      <div class="sx-field"><span>學制</span>
+        <div class="sx-chips"><button type="button" data-rlv="" aria-pressed="true">國小＋國中</button><button type="button" data-rlv="國小" aria-pressed="false">國小</button><button type="button" data-rlv="國中" aria-pressed="false">國中</button></div></div>
+    </div>
+    <div class="sx-region">
+      <div class="sx-card"><h2>縣市</h2><p class="sub">依學生數排序，右側是近五年變化。</p><ul class="sx-rows" id="regCounties"></ul></div>
+      <div class="sx-card"><div class="sx-cardhead"><div><h2 id="regTitle">鄉鎮市區</h2><p class="sub" id="regSub"></p></div><button type="button" class="sx-btn" id="regGo">看這個縣市的學校</button></div><ul class="sx-rows" id="regDistricts"></ul></div>
+    </div>
+    <div class="sx-src">
+      <h2>資料來源與說明</h2>
+      <ul>
+        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>。</li>
+        <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
+        <li>範圍：目前收錄國小與國中，高中職與大專的校別資料格式不同，之後再加入。「五年」指和 5 個學年度前相比。</li>
+        <li>有些學校附設在高中內，名錄沒有獨立地址，區域會標示為「區域未標示」。</li>
+        <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
+        <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo" role="img" aria-label="鴻綸科技 x Google for Education Professional Development Partner"></div>
+    <p>© 2026 鴻綸科技股份有限公司. All Rights Reserved.</p>
+    <p>Hunglun Technology Co., Ltd.　·　<a href="https://www.hunglun.com/">www.hunglun.com</a></p>
+    <p class="legal">本系統之軟體架構、程式碼、視覺設計及文字內容均受著作權法與智慧財產權保護。未經本公司正式書面授權，嚴禁進行任何形式之重製、改作、散布、公開傳輸或商業營利行為，違者將依法追究相關法律責任。</p>
+    <p class="legal">本站不蒐集任何個人資料。統計數字來自教育部公開資料，以教育部公布為準。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('themeBtn'),r=document.documentElement;
+  function label(){b.textContent=r.getAttribute('data-theme')==='dark'?'淺色模式':'深色模式';}
+  label();
+  b.addEventListener('click',function(){
+    var d=r.getAttribute('data-theme')==='dark';
+    if(d)r.removeAttribute('data-theme');else r.setAttribute('data-theme','dark');
+    try{localStorage.setItem('hunglun-theme',d?'light':'dark');}catch(e){}
+    label();
+  });
+})();
+</script>
+<script src="/core.js?v=4"></script>
+<script src="/region.js?v=4"></script>
+</body>
+</html>

@@ -39,15 +39,17 @@ window.SS = (function () {
   function niceTicks(min, max, count) {
     var raw = (max - min) / count || 1, mag = Math.pow(10, Math.floor(Math.log10(raw)));
     var step = [1, 2, 2.5, 5, 10].map(function (m) { return m * mag; }).filter(function (s) { return s >= raw; })[0];
-    var start = Math.floor(min / step) * step, out = [];
-    for (var v = start; v <= max + step * 0.01; v += step) out.push(+v.toFixed(6));
+    var out = [], v = Math.floor(min / step) * step;
+    for (;;) { out.push(+v.toFixed(6)); if (v >= max - step * 1e-6) break; v += step; }
     return out;
   }
 
   /* 折線圖：cfg = {years, series:[{name,color,vals}], zero, label, labels(右側直接標名), valFmt, tickFmt} */
+  var charts = [];
   S.lineChart = function (box, cfg) {
+    box._cfg = cfg; if (charts.indexOf(box) < 0) charts.push(box);
     box.innerHTML = '';
-    var W = 620, H = cfg.h || 250, L = 54, R = cfg.labels ? 70 : 14, T = 12, B = 26;
+    var W = Math.max(280, box.clientWidth || 620), H = cfg.h || (W < 480 ? 220 : 280), L = 50, R = cfg.labels ? (W < 480 ? 54 : 70) : 14, T = 12, B = 26;
     var all = [].concat.apply([], cfg.series.map(function (s) { return s.vals.filter(function (v) { return v != null; }); }));
     var min = cfg.zero ? 0 : Math.min.apply(null, all), max = Math.max.apply(null, all);
     if (!cfg.zero) { var pad = (max - min) * 0.12 || max * 0.05 || 1; min -= pad; max += pad; }
@@ -122,25 +124,23 @@ window.SS = (function () {
     hit.addEventListener('pointerleave', hide);
   };
 
-  /* ---------- 分頁籤與網址狀態：#find&s=學校代碼 ---------- */
-  S.hash = function () {
-    var p = location.hash.replace(/^#/, '').split('&'), o = { tab: p[0] || 'find' };
-    p.slice(1).forEach(function (kv) { var a = kv.split('='); o[a[0]] = decodeURIComponent(a[1] || ''); });
+  var rt; window.addEventListener('resize', function () {
+    clearTimeout(rt); rt = setTimeout(function () {
+      charts.forEach(function (b) { if (b.clientWidth && b._cfg && document.body.contains(b)) S.lineChart(b, b._cfg); });
+      if (S.onResize) S.onResize();
+    }, 150);
+  });
+
+  /* ---------- 網址狀態：?c=縣市&d=鄉鎮&lv=學制&pub=1&sort=down&q=關鍵字&s=學校代碼 ---------- */
+  S.query = function () {
+    var o = {}; new URLSearchParams(location.search).forEach(function (v, k) { o[k] = v; });
     return o;
   };
-  S.setHash = function (tab, extra) {
-    var h = '#' + tab;
-    for (var k in (extra || {})) if (extra[k]) h += '&' + k + '=' + encodeURIComponent(extra[k]);
-    history.replaceState(null, '', location.pathname + h);
-  };
-  S.showTab = function (name) {
-    ['find', 'region', 'national'].forEach(function (t) {
-      S.$('tab-' + t).hidden = t !== name;
-      S.$('btn-' + t).setAttribute('aria-selected', t === name);
-    });
-    S.state.tab = name;
-    if (S.mods[name] && S.mods[name].show) S.mods[name].show();
-    if (name !== 'find') S.setHash(name);
+  S.setQuery = function (obj) {
+    var p = new URLSearchParams();
+    for (var k in obj) if (obj[k]) p.set(k, obj[k]);
+    var q = p.toString();
+    history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
   };
 
   /* ---------- 載入資料 ---------- */
@@ -159,23 +159,20 @@ window.SS = (function () {
   }
 
   S.boot = function () {
-    Promise.all([
-      fetch('/schools.json?v=1').then(function (r) { return r.json(); }),
-      fetch('/data.json?v=1').then(function (r) { return r.json(); })
-    ]).then(function (res) {
+    var page = document.body.dataset.page;
+    var need = [fetch('/schools.json?v=3').then(function (r) { return r.json(); })];
+    if (page === 'national') need.push(fetch('/data.json?v=3').then(function (r) { return r.json(); }));
+    Promise.all(need).then(function (res) {
       prepare(res[0]); S.nat = res[1];
-      S.$('built').textContent = S.built;
-      var tot = 0, cs = {}; S.schools.forEach(function (x) { tot += x.cur; cs[x.c] = 1; });
-      S.$('heroStats').innerHTML = '<span><b>' + S.fmt(S.schools.length) + '</b>所學校</span><span><b>' + S.fmt(tot) + '</b>位學生</span><span><b>' + Object.keys(cs).length + '</b>個縣市</span><span>' + S.latest + ' 學年度</span>';
-      ['find', 'region', 'national'].forEach(function (t) {
-        S.$('btn-' + t).addEventListener('click', function () { S.showTab(t); });
-        if (S.mods[t] && S.mods[t].init) S.mods[t].init();
-      });
-      var h = S.hash();
-      S.showTab(['find', 'region', 'national'].indexOf(h.tab) >= 0 ? h.tab : 'find');
-      if (h.s && S.byId[h.s] && S.mods.find) S.mods.find.open(h.s, true);
+      var el = S.$('built'); if (el) el.textContent = S.built;
+      var hs = S.$('heroStats');
+      if (hs) {
+        var tot = 0, cs = {}; S.schools.forEach(function (x) { tot += x.cur; cs[x.c] = 1; });
+        hs.innerHTML = '<span><b>' + S.fmt(S.schools.length) + '</b>所學校</span><span><b>' + S.fmt(tot) + '</b>位學生</span><span><b>' + Object.keys(cs).length + '</b>個縣市</span><span>' + S.latest + ' 學年度</span>';
+      }
+      if (S.mods[page] && S.mods[page].init) S.mods[page].init();
     }).catch(function () {
-      S.$('sum').textContent = '資料載入失敗，請重新整理頁面。';
+      var m = S.$('sum') || S.$('regSub') || S.$('nk1'); if (m) m.textContent = '資料載入失敗，請重新整理頁面。';
     });
   };
   document.addEventListener('DOMContentLoaded', S.boot);

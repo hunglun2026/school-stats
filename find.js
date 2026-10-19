@@ -3,7 +3,8 @@
   'use strict';
   var $ = S.$, fmt = S.fmt, esc = S.esc;
   var COLORS = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)'];
-  var f = { q: '', county: '', district: '', lv: '', pub: '', sort: 'big', shown: 40 };
+  var f = { q: '', county: '', district: '', lv: '', pub: '', sort: 'big', shown: 40 }, curId = '';
+  function sync() { S.setQuery({ q: f.q, c: f.county, d: f.district, lv: f.lv, pub: f.pub, sort: f.sort === 'big' ? '' : f.sort, s: curId }); }
   var cmp = [], metric = 'st', lastFocus = null, view = [];
 
   function match(s, qn) { return !qn || s.key.indexOf(qn) >= 0 || S.norm(s.c + s.d).indexOf(qn) >= 0; }
@@ -46,6 +47,7 @@
   }
 
   function render() {
+    sync();
     view = filtered();
     var qn = S.norm(f.q.trim()).toLowerCase(), total = 0, cur5 = 0, base5 = 0;
     view.forEach(function (s) { total += s.cur; if (s.base) { cur5 += s.cur; base5 += s.base; } });
@@ -129,7 +131,7 @@
   function closeDrawers() {
     ['drawer', 'cmp'].forEach(function (id) { $(id).hidden = true; });
     document.body.style.overflow = '';
-    S.setHash('find', {});
+    curId = ''; sync();
     if (lastFocus && lastFocus.focus) lastFocus.focus();
   }
 
@@ -202,11 +204,11 @@
     var area = $('dArea');
     if (area) area.onclick = function () {
       f.county = s.c; f.district = s.d; f.lv = s.lv; f.q = ''; f.shown = 40;
-      syncControls(); closeDrawers(); render(); $('list').scrollIntoView({ block: 'start' });
+      syncControls(); closeDrawers(); render(); $('sum').scrollIntoView({ block: 'start' });
     };
     $('cmp').hidden = true;
     if ($('drawer').hidden) openDrawer($('drawer')); else $('drawer').querySelector('.sx-panel').scrollTop = 0;
-    S.setHash('find', { s: id });
+    curId = id; sync();
   }
 
   function syncControls() {
@@ -218,18 +220,12 @@
 
   S.mods.find = {
     open: open,
-    // 區域排行頁點「查看學校」：帶著縣市、鄉鎮與學制跳過來
-    goArea: function (county, district, lv) {
-      f.county = county; f.district = district || ''; f.lv = lv || ''; f.q = ''; f.shown = 40;
-      syncControls(); render(); S.showTab('find'); S.setHash('find', {});
-    },
-    show: function () { S.setHash('find', {}); },
     init: function () {
       var c = $('fCounty');
       c.innerHTML = '<option value="">全部縣市</option>';
       counties().forEach(function (n) { c.add(new Option(n, n)); });
       fillDistricts();
-      $('q').addEventListener('input', function (e) { f.q = e.target.value; f.shown = 40; if (S.state.tab !== 'find') S.showTab('find'); render(); });
+      $('q').addEventListener('input', function (e) { f.q = e.target.value; f.shown = 40; render(); });
       c.addEventListener('change', function () { f.county = c.value; f.district = ''; f.shown = 40; fillDistricts(); render(); });
       $('fDistrict').addEventListener('change', function (e) { f.district = e.target.value; f.shown = 40; render(); });
       $('fSort').addEventListener('change', function (e) { f.sort = e.target.value; f.shown = 40; render(); });
@@ -238,7 +234,7 @@
       document.querySelectorAll('[data-quick]').forEach(function (b) {
         b.addEventListener('click', function () {
           f = { q: '', county: '', district: '', lv: '', pub: '', sort: b.dataset.quick, shown: 40 };
-          syncControls(); render(); S.showTab('find'); $('app').scrollIntoView({ block: 'start' });
+          syncControls(); render(); $('sum').scrollIntoView({ block: 'start' });
         });
       });
       $('reset').addEventListener('click', function () { f = { q: '', county: '', district: '', lv: '', pub: '', sort: 'big', shown: 40 }; syncControls(); render(); });
@@ -263,7 +259,11 @@
           else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
         });
       });
+      var qs = S.query();
+      f.q = qs.q || ''; f.county = qs.c || ''; f.district = qs.d || ''; f.lv = qs.lv || ''; f.pub = qs.pub || ''; f.sort = qs.sort || 'big';
+      if (f.county && counties().indexOf(f.county) < 0) { f.county = ''; f.district = ''; }
       renderTray(); syncControls(); render();
+      if (qs.s && S.byId[qs.s]) open(qs.s);
     }
   };
 })(window.SS);

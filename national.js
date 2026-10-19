@@ -29,14 +29,15 @@
     $('natLegend').innerHTML = LEVELS.map(function (l, k) { return '<span><i style="background:' + COLORS[k] + '"></i>' + l + '</span>'; }).join('');
   }
 
+  function svg0() { return $('natPyr'); }
   function pyramid() {
-    var svg = $('natPyr'), W = 620, rowH = 17, T = 22, H = T + 28 * rowH + 6, mid = W / 2, NS = 'http://www.w3.org/2000/svg';
+    var svg = $('natPyr'), W = Math.max(280, svg0().clientWidth || 620), rowH = 17, T = 22, H = T + 28 * rowH + 6, mid = W / 2, NS = 'http://www.w3.org/2000/svg';
     svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H); svg.innerHTML = '';
     var rows = S.nat.age.filter(function (r) { return r.y === year; }), ages = [];
     rows.forEach(function (r) { if (ages.indexOf(r.age) < 0) ages.push(r.age); });
     ages.sort(function (a, b) { return parseInt(a, 10) - parseInt(b, 10); });
     var get = function (a, g) { return rows.filter(function (r) { return r.age === a && r.g === g; })[0].n; };
-    var max = Math.max.apply(null, rows.map(function (r) { return r.n; })), half = mid - 62, w = function (n) { return n / max * half; };
+    var max = Math.max.apply(null, rows.map(function (r) { return r.n; })), half = mid - 56, w = function (n) { return n / max * half; };
     function add(tag, attrs, text) { var e = S.el(tag, attrs, text); svg.appendChild(e); return e; }
     add('text', { x: mid - 44, y: 12, 'text-anchor': 'end', style: 'fill:var(--c1);font-weight:600' }, '男生');
     add('text', { x: mid + 44, y: 12, style: 'fill:var(--c2);font-weight:600' }, '女生');
@@ -55,13 +56,14 @@
   }
 
   S.mods.national = {
-    show: renderAll,
     init: function () {
       var years = Array.from(new Set(S.nat.county.map(function (r) { return r.y; }))).sort();
       year = years[years.length - 1];
       var sel = $('natYear');
       years.slice().reverse().forEach(function (y) { sel.add(new Option(y + ' 學年度', y)); });
       sel.addEventListener('change', function () { year = +sel.value; kpis(years); pyramid(); });
+      renderAll();
+      S.onResize = function () { pyramid(); };
     }
   };
 })(window.SS);

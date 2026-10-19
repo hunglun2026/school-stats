@@ -6,11 +6,6 @@
 .sx button{cursor:pointer}
 .sx-num{font-variant-numeric:tabular-nums}
 
-/* 分頁籤 */
-.sx-tabs{display:flex;gap:4px;padding:4px;background:var(--soft);border-radius:999px;width:max-content;max-width:100%;overflow-x:auto;margin:0 auto 24px}
-.sx-tabs button{border:0;background:transparent;padding:9px 22px;border-radius:999px;font-size:.98rem;white-space:nowrap}
-.sx-tabs button[aria-selected="true"]{background:var(--card);box-shadow:0 1px 3px rgba(0,0,0,.14);font-weight:600}
-
 /* 找學校：左篩選、右結果 */
 .sx-find{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start}
 .sx-filters{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px;display:grid;gap:16px;position:sticky;top:80px}
@@ -152,3 +147,10 @@ button.sx-row:hover,.sx-row[aria-current="true"]{background:var(--soft)}
 .sx-find{scroll-margin-top:80px}
 #app{scroll-margin-top:70px}
 @media (max-width:860px){.sx-filters{position:static}}
+
+.sx-cardhead{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px 16px;align-items:flex-start;margin-bottom:6px}
+.sx-src h2{font-size:1.05rem;font-weight:600;margin-bottom:6px}
+.sx-src{border-top:1px solid var(--line);padding-top:20px}
+.sx-chart text{font-size:12px}
+.sx-sum{position:sticky;top:60px;z-index:20;background:var(--bg);padding:8px 0}
+@media (max-width:860px){.sx-sum{position:static}}

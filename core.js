@@ -1,4 +1,4 @@
-/* 全國中小學人數查詢：共用核心（資料載入、折線圖、迷你線、分頁籤與網址狀態） */
+/* 全國學校人數查詢：共用核心（資料載入、折線圖、迷你線、分頁籤與網址狀態） */
 window.SS = (function () {
   'use strict';
   var NS = 'http://www.w3.org/2000/svg';
@@ -153,11 +153,12 @@ window.SS = (function () {
   S.HORIZON = 6;
   // mode: 'cohort'＝世代銜接；'flat'＝新生和今年一樣多。回傳 {total:[第0..6年], floor:[...]}，floor 只算目前已在學的學生
   S.project = function (s, mode) {
-    var gr = s.lv === '國小' ? 6 : 3, g = [], i, k, j, tot = [], floor = [];
+    if (!s.g.length) return null;  // 大專沒有各年級資料，不推估
+    var gr = s.g.length / 2, ex = s.ex || 0, g = [], i, k, j, tot = [], floor = [];
     for (i = 0; i < gr; i++) g.push(s.g[i * 2] + s.g[i * 2 + 1]);
     var gf = S.gf[s.lv], useCohort = mode !== 'flat' && s.sh != null;
     for (k = 0; k <= S.HORIZON; k++) {
-      var t = 0, f = 0;
+      var t = ex, f = ex;
       for (j = 1; j <= gr; j++) {
         var from = j - k;  // 今年的 from 年級，到第 k 年升到 j 年級
         if (from >= 1) { t += g[from - 1]; f += g[from - 1]; }
@@ -188,18 +189,18 @@ window.SS = (function () {
 
   // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
   S.summaries = function () {
-    if (!S._sum) S._sum = fetch('/summaries.json?v=11').then(function (r) { return r.json(); });
+    if (!S._sum) S._sum = fetch('/summaries.json?v=13').then(function (r) { return r.json(); });
     return S._sum;
   };
 
   S.fillFuture = function () {
     // 太小的學校（30 人以下）百分比跳動太大，不參與「未來減少最多」排序；沒有一年級的學校（只收高年級）減少是結構造成，也不排
-    S.schools.forEach(function (s) { var p = S.project(s, 'cohort').total; s.fut = s.cur >= 30 && s.g[0] + s.g[1] > 0 ? S.pct(p[3], p[0]) : null; });
+    S.schools.forEach(function (s) { var pj = S.project(s, 'cohort'); s.fut = pj && s.cur >= 30 && s.g[0] + s.g[1] > 0 ? S.pct(pj.total[3], pj.total[0]) : null; });
   };
 
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=11').then(function (r) { return r.json(); })];
+    var need = [fetch('/schools.json?v=13').then(function (r) { return r.json(); })];
     if (page === 'national') need.push(fetch('/data.json?v=11').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
       prepare(res[0]); S.nat = res[1]; S.fillFuture();

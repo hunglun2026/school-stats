@@ -4,12 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script>(function(){try{var t=localStorage.getItem('hunglun-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
-<title>全國中小學地圖｜學生人數變化一眼看｜鴻綸科技</title>
-<meta name="description" content="把全國 3,200 多所國小與國中畫在地圖上，顏色是近五年或未來 3 年的學生人數變化，大小是學生數，點一所學校看詳情。">
+<title>全國學校地圖｜學生人數變化一眼看｜鴻綸科技</title>
+<meta name="description" content="把全國 4,000 多所學校畫在地圖上，顏色是近五年或未來 3 年的學生人數變化，大小是學生數，點一所學校看詳情。">
 <link rel="canonical" href="https://school.hunglun.com/map/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="全國中小學地圖｜學生人數變化一眼看｜鴻綸科技">
-<meta property="og:description" content="把全國 3,200 多所國小與國中畫在地圖上，顏色是近五年或未來 3 年的學生人數變化，大小是學生數，點一所學校看詳情。">
+<meta property="og:title" content="全國學校地圖｜學生人數變化一眼看｜鴻綸科技">
+<meta property="og:description" content="把全國 4,000 多所學校畫在地圖上，顏色是近五年或未來 3 年的學生人數變化，大小是學生數，點一所學校看詳情。">
 <meta property="og:url" content="https://school.hunglun.com/map/">
 <meta property="og:locale" content="zh_TW">
 <meta name="twitter:card" content="summary">
@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=11">
-<link rel="stylesheet" href="/stats.css?v=11">
+<link rel="stylesheet" href="/base.css?v=13">
+<link rel="stylesheet" href="/stats.css?v=13">
 <link rel="stylesheet" href="/vendor/leaflet.css?v=1">
 </head>
 <body class="sx" data-page="map">
@@ -60,12 +60,12 @@
         <ul class="map-results" id="mResults"></ul></div>
       <label class="sx-field"><span>縣市</span><select id="mCounty"></select></label>
       <div class="sx-field"><span>學制</span>
-        <div class="sx-chips"><button type="button" data-mlv="" aria-pressed="true">全部</button><button type="button" data-mlv="國小" aria-pressed="false">國小</button><button type="button" data-mlv="國中" aria-pressed="false">國中</button></div></div>
+        <div class="sx-chips"><button type="button" data-mlv="" aria-pressed="true">全部</button><button type="button" data-mlv="國小" aria-pressed="false">國小</button><button type="button" data-mlv="國中" aria-pressed="false">國中</button><button type="button" data-mlv="高中職" aria-pressed="false">高中職</button><button type="button" data-mlv="大專" aria-pressed="false">大專</button></div></div>
       <div class="sx-field"><span>顏色代表</span>
         <div class="sx-chips"><button type="button" data-mmode="ch5" aria-pressed="true">近五年變化</button><button type="button" data-mmode="fut" aria-pressed="false">未來 3 年推估</button></div></div>
     </div>
     <div class="map-stage">
-      <div id="map" role="application" aria-label="全國中小學地圖"></div>
+      <div id="map" role="application" aria-label="全國學校地圖"></div>
       <aside class="map-panel" aria-label="圖例">
         <div class="map-sum" id="mapSum" aria-live="polite">資料載入中…</div>
         <ul class="map-legend" id="mapLegend"></ul>
@@ -74,7 +74,7 @@
     <div class="sx-src">
       <h2>資料來源與說明</h2>
       <ul>
-        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>。</li>
+        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>、<a href="https://data.gov.tw/dataset/6238" rel="noopener">高級中等學校校別資料</a>、<a href="https://data.gov.tw/dataset/6089" rel="noopener">一般高級中等學校名錄</a>、<a href="https://data.gov.tw/dataset/6231" rel="noopener">大專院校校別學生數</a>。</li>
         <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
         <li>地圖位置來自 <a href="https://www.openstreetmap.org/copyright" rel="noopener">OpenStreetMap</a> 貢獻者（ODbL 授權），用校名、縣市與鄉鎮市區比對；比對不到的學校不會顯示在地圖上（目前 <span id="mapCover">--</span> 所有座標）。</li>
         <li>顏色用 5 個等級區分，圓圈大小代表學生數；「未來 3 年推估」是世代銜接推估，不是裁併或減班的決定。</li>
@@ -110,7 +110,7 @@
 })();
 </script>
 <script src="/vendor/leaflet.js?v=1"></script>
-<script src="/core.js?v=11"></script>
-<script src="/map.js?v=11"></script>
+<script src="/core.js?v=13"></script>
+<script src="/map.js?v=13"></script>
 </body>
 </html>

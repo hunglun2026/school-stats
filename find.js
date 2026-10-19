@@ -55,7 +55,7 @@
     var csv = rows.map(function (r) { return r.map(function (v) { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\r\n');
     var a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
-    a.download = '中小學人數_' + S.latest + '學年度.csv';
+    a.download = '學校人數_' + S.latest + '學年度.csv';
     document.body.appendChild(a); a.click(); a.remove();
   }
 
@@ -123,7 +123,7 @@
       body.innerHTML = '<table class="sx-tbl"><thead><tr><th>學校</th><th>學生數</th><th>班級</th><th>每班</th><th>五年變化</th></tr></thead><tbody>' +
         schools.map(function (s) {
           var cl = s.cl[S.iL];
-          return '<tr><td>' + esc(s.n) + '<br><small>' + esc(s.c + ' ' + s.d) + '</small></td><td class="sx-num">' + fmt(s.cur) + '</td><td class="sx-num">' + cl +
+          return '<tr><td>' + esc(s.n) + '<br><small>' + esc(s.c + ' ' + s.d) + '</small></td><td class="sx-num">' + fmt(s.cur) + '</td><td class="sx-num">' + (cl == null ? '-' : cl) +
             '</td><td class="sx-num">' + (cl ? (s.cur / cl).toFixed(1) : '-') + '</td><td>' + S.chg(s.ch5) + '</td></tr>';
         }).join('') + '</tbody></table>';
     }
@@ -150,10 +150,11 @@
   }
 
   function gradeBars(s) {
-    var first = s.lv === '國小' ? 1 : 7, n = s.lv === '國小' ? 6 : 3, max = Math.max.apply(null, s.g) || 1, h = '';
+    var first = s.lv === '國中' ? 7 : 1, n = s.g.length / 2, max = Math.max.apply(null, s.g) || 1, h = '';
+    var lab = function (k) { return s.lv === '高中職' ? '高' + '一二三四'.charAt(k) : (first + k) + ' 年級'; };
     for (var i = 0; i < n; i++) {
       var m = s.g[i * 2], w = s.g[i * 2 + 1];
-      h += '<div class="sx-g sx-num" title="' + (first + i) + ' 年級：' + s.gc[i] + ' 班"><span>' + (first + i) + ' 年級</span>' +
+      h += '<div class="sx-g sx-num" title="' + lab(i) + '：' + s.gc[i] + ' 班"><span>' + lab(i) + '</span>' +
         '<span class="bm"><i style="width:' + (m / max * 100).toFixed(1) + '%"></i><em>' + m + '</em></span>' +
         '<span class="bf"><i style="width:' + (w / max * 100).toFixed(1) + '%"></i><em>' + w + '</em></span></div>';
     }
@@ -178,18 +179,20 @@
 
   var PCOL = ['var(--c3)', 'var(--c2)', 'var(--c5)'];
   function projHtml(s) {
+    if (!s.g.length) return '';
     var pc = S.project(s, 'cohort'), pf = S.project(s, 'flat');
     var cl = s.cl[S.iL], per = cl ? s.cur / cl : 0, end = S.latest + S.HORIZON;
-    var last = pc.total[S.HORIZON], f3 = pc.floor[3], h3 = pc.total[3];
+    var kf = Math.min(3, s.g.length / 2 - 1), last = pc.total[S.HORIZON], f3 = pc.floor[kf], h3 = pc.total[3];  // 三年制學校 3 年後現有學生已全部畢業，改看第 kf 年
     var classes = per ? Math.max(1, Math.round(last / per)) : null;
     var err = s.lv === '國小' ? '約 2%、4%、7%' : '約 4%、7%、9%';
-    return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生逐年升級，這部分幾乎確定；新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中看現在的國小各年級），不是單純假設趨勢。</p>' +
+    return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生逐年升級，這部分幾乎確定；新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中與高中職看現在更低年級的在學人數），不是單純假設趨勢。</p>' +
       '<div class="sx-chart" id="pChart"></div><div class="sx-legend" id="pLegend"></div>' +
       '<p class="sx-pnote">推估 ' + (S.latest + 3) + ' 學年度約 <b>' + fmt(h3) + ' 人</b>（較今年 ' + S.chg(S.pct(h3, s.cur)) + '），' + end + ' 學年度約 <b>' + fmt(last) + ' 人</b>' + (classes ? '，約 ' + classes + ' 班（以目前每班 ' + per.toFixed(1) + ' 人估）' : '') +
-      '。其中 ' + fmt(f3) + ' 人是 ' + (S.latest + 3) + ' 學年度仍在學的現有學生。</p>' +
+      '。其中 ' + fmt(f3) + ' 人是 ' + (S.latest + kf) + ' 學年度仍在學的現有學生。</p>' +
       '<p class="sub">用過去資料回測，預測 1、2、3 年後的學校人數，平均誤差' + err + '。不含遷入遷出與學區調整，也不代表任何裁併或減班決定。<a href="/method/">算法說明</a></p></div>';
   }
   function drawProj(s) {
+    if (!s.g.length || !$('pChart')) return;
     var yrs = S.years.slice(), k;
     for (k = 1; k <= S.HORIZON; k++) yrs.push(S.latest + k);
     var pad = function (arr, from) { var o = []; for (var i = 0; i < yrs.length; i++) o.push(i < from ? null : arr[i - from]); return o; };
@@ -207,8 +210,8 @@
       '<p class="sub">依這所學校的在學人數與專任教師數粗估，方便評估導入範圍。</p>' +
       '<div class="sx-kpis sx-num"><div class="sx-kpi"><div class="k">學生帳號</div><div class="v">' + fmt(s.cur) + '</div></div>' +
       '<div class="sx-kpi"><div class="k">教師帳號（專任）</div><div class="v">' + (tch ? fmt(tch) : '無資料') + '</div></div>' +
-      '<div class="sx-kpi"><div class="k">每人一台 Chromebook</div><div class="v">' + fmt(s.cur) + ' 台</div><div class="d">班級共用一般只需其中一部分</div></div>' +
-      '<div class="sx-kpi"><div class="k">班級數（Classroom 課程）</div><div class="v">' + s.cl[S.iL] + '</div><div class="d">一班至少一個</div></div></div>' +
+      (s.lv === '大專' ? '' : '<div class="sx-kpi"><div class="k">每人一台 Chromebook</div><div class="v">' + fmt(s.cur) + ' 台</div><div class="d">班級共用一般只需其中一部分</div></div>' +
+      '<div class="sx-kpi"><div class="k">班級數（Classroom 課程）</div><div class="v">' + s.cl[S.iL] + '</div><div class="d">一班至少一個</div></div>') + '</div>' +
       '<p class="sub" style="margin-top:8px">只是帳號與設備數量的概算，不含職員與行政帳號，授權方案與費用請洽我們。鴻綸科技是 Google for Education Professional Development Partner，可協助評估、導入與教師研習。</p>' +
       '<a class="sx-btn primary" style="display:inline-block;margin-top:6px;text-decoration:none" href="https://www.hunglun.com/contact" target="_blank" rel="noopener">詢問 ' + esc(s.n) + ' 的導入方案</a></div>';
   }
@@ -225,6 +228,7 @@
     var s = S.byId[id]; if (!s) return;
     var cl = s.cl[S.iL], tch = s.t[0] + s.t[1], males = 0, i;
     for (i = 0; i < s.g.length; i += 2) males += s.g[i];
+    if (s.mf) males = s.mf[0];  // 大專沒有各年級資料，直接用男生計
     var mp = Math.round(males / s.cur * 100);
     var mapQ = encodeURIComponent(s.a || s.c + s.d + s.n);
     metric = 'st';
@@ -232,12 +236,12 @@
       '<h2 id="dName">' + esc(s.n) + '</h2><div class="sx-where"><span class="sx-tag">' + s.lv + '</span><span class="sx-tag">' + (s.pub ? '公立' : '私立') + '</span><span>' + esc(s.c + ' ' + s.d) + '</span></div>' +
       '<div class="sx-kpis sx-num">' +
       '<div class="sx-kpi"><div class="k">' + S.latest + ' 學年度學生數</div><div class="v">' + fmt(s.cur) + '</div><div class="d">' + S.chg(s.ch5, '較 ' + S.years[S.iL - 5]) + '</div></div>' +
-      '<div class="sx-kpi"><div class="k">班級數</div><div class="v">' + cl + '</div><div class="d">平均每班 ' + (cl ? (s.cur / cl).toFixed(1) : '-') + ' 人</div></div>' +
-      '<div class="sx-kpi"><div class="k">專任教師</div><div class="v">' + tch + '</div><div class="d">' + (tch ? '每位教師對應 ' + (s.cur / tch).toFixed(1) + ' 位學生' : '無資料') + '</div></div>' +
+      (cl == null ? '' : '<div class="sx-kpi"><div class="k">班級數</div><div class="v">' + cl + '</div><div class="d">平均每班 ' + (cl ? (s.cur / cl).toFixed(1) : '-') + ' 人</div></div>') +
+      (s.lv === '大專' ? '' : '<div class="sx-kpi"><div class="k">專任教師</div><div class="v">' + (tch || '無資料') + '</div><div class="d">' + (tch ? '每位教師對應 ' + (s.cur / tch).toFixed(1) + ' 位學生' : '無資料') + '</div></div>') +
       '<div class="sx-kpi"><div class="k">男女比例</div><div class="v">' + mp + ' : ' + (100 - mp) + '</div><div class="d">男 ' + fmt(males) + '，女 ' + fmt(s.cur - males) + '</div></div></div>' +
       '<div class="sx-sec"><h3>白話解讀</h3><div class="sx-sumtext" id="dSm">載入中…</div><p class="sub">由公開在學人數自動整理，沒有人工評論。</p></div>' +
       '<div class="sx-sec"><h3>歷年變化</h3><div class="sx-seg" id="dSeg"><button type="button" data-m="st" aria-pressed="true">學生數</button><button type="button" data-m="cl" aria-pressed="false">班級數</button><button type="button" data-m="avg" aria-pressed="false">每班人數</button></div><div class="sx-chart" id="dChart"></div></div>' +
-      '<div class="sx-sec"><h3>各年級男女人數</h3><p class="sub">' + S.latest + ' 學年度</p>' + gradeBars(s) + '</div>' +
+      (s.g.length ? '<div class="sx-sec"><h3>各年級男女人數</h3><p class="sub">' + S.latest + ' 學年度</p>' + gradeBars(s) + '</div>' : '') +
       '<div class="sx-sec"><h3>和附近學校比</h3>' + rankBlock(s) + '</div>' +
       projHtml(s) + gwsHtml(s) +
       '<div class="sx-sec"><h3>聯絡資訊</h3><div class="sx-contact">' +
@@ -250,6 +254,7 @@
       '<a class="sx-btn" style="text-decoration:none" href="/school/' + s.id + '/">開啟完整頁面</a>' +
       '<a class="sx-btn" style="text-decoration:none" href="/map/?s=' + s.id + '">在地圖上看</a></div>';
     drawMetric(s); drawProj(s);
+    if (cl == null && $('dSeg')) $('dSeg').style.display = 'none';
     S.summaries().then(function (m) {
       var el = $('dSm'); if (!el || curId !== s.id) return;
       el.innerHTML = (m[s.id] || '').split(/(?<=。)/).filter(Boolean).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') || '暫無解讀';

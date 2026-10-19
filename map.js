@@ -14,7 +14,7 @@
   function val(s) { return st.mode === 'ch5' ? s.ch5 : s.fut; }
   function bin(v) { if (v == null) return null; for (var i = 0; i < BINS.length; i++) if (v < BINS[i].max) return i; return BINS.length - 1; }
   function zf() { var z = map ? map.getZoom() : 8; return z <= 7 ? .42 : z === 8 ? .52 : z === 9 ? .66 : z === 10 ? .82 : z === 11 ? 1 : z === 12 ? 1.2 : 1.45; }
-  function radius(n) { return Math.max(2.2, (2 + Math.sqrt(n) * 0.3) * zf()); }
+  function radius(n) { return Math.max(2.2, (2 + Math.sqrt(Math.min(n, 5000)) * 0.3) * zf()); }  // 大專人數大，設上限避免蓋住別的學校
 
   function popupHtml(s) {
     var v5 = s.ch5, vf = s.fut, mapQ = encodeURIComponent(s.a || s.c + s.d + s.n);

@@ -165,3 +165,36 @@ button.sx-row:hover,.sx-row[aria-current="true"]{background:var(--soft)}
 .sx-school .sx-ncard{margin-top:20px}
 .sx-contact{display:grid;gap:4px}
 code{background:var(--bg-soft);padding:2px 6px;border-radius:4px;word-break:break-all}
+
+/* 學校地圖 */
+.pg-slim{padding:22px 0 14px;margin-bottom:14px}
+.pg-slim h1{font-size:clamp(1.5rem,3.4vw,2rem);margin:0 0 4px}
+.map-sec{padding-top:0}
+.map-bar{display:flex;flex-wrap:wrap;gap:12px 22px;align-items:flex-end;margin-bottom:12px}
+.map-search{position:relative;min-width:200px;flex:1 1 220px;max-width:320px}
+.map-results{list-style:none;margin:2px 0 0;padding:0;position:absolute;left:0;right:0;top:100%;z-index:1100;background:var(--card);border:1px solid var(--line);border-radius:8px;box-shadow:0 8px 22px rgba(0,0,0,.18);overflow:hidden}
+.map-results:empty{display:none}
+.map-results button{display:flex;justify-content:space-between;gap:8px;width:100%;text-align:left;border:0;background:none;padding:9px 12px;cursor:pointer;font:inherit;color:var(--text)}
+.map-results button:hover{background:var(--bg-soft)}
+.map-results small{color:var(--muted)}
+.mp-none{padding:10px 12px;color:var(--muted)}
+.map-stage{position:relative}
+#map{height:68vh;min-height:440px;border-radius:12px;border:1px solid var(--line);background:#dfe6ec;z-index:1}
+:root[data-theme="dark"] #map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.9)}
+:root[data-theme="dark"] #map{background:#1c2430}
+.map-panel{position:absolute;right:12px;top:12px;z-index:500;background:var(--card);color:var(--text);border:1px solid var(--line);border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.18);padding:10px 12px;max-width:240px;font-size:.88rem}
+.map-sum{font-weight:600;margin-bottom:6px}
+.map-legend{list-style:none;margin:0;padding:0;display:grid;gap:4px}
+.map-legend li{display:flex;align-items:center;gap:8px}
+.map-legend i{width:12px;height:12px;border-radius:50%;flex:none}
+.map-legend span{margin-left:auto;color:var(--muted)}
+.leaflet-popup-content{margin:12px 14px;font-family:inherit;color:#0f172a}
+.mp b{font-size:1rem}
+.mp-sub{color:#64748b;font-size:.82rem;margin-bottom:6px}
+.mp-row{display:flex;justify-content:space-between;gap:12px;font-size:.9rem;padding:2px 0}
+.mp-links{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:.88rem}
+@media (max-width:700px){
+  #map{height:62vh;min-height:360px}
+  .map-panel{position:static;max-width:none;margin-top:10px}
+  .map-legend{grid-template-columns:1fr 1fr}
+}

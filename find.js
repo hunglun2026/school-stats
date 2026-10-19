@@ -244,7 +244,8 @@
       (!s.a && !s.tel ? '<div>這所學校附設在其他學校內，名錄沒有獨立的聯絡資料。</div>' : '') + '</div></div>' +
       '<div class="sx-actions"><button type="button" class="sx-btn primary" id="dCmp" data-id="' + s.id + '">' + (cmp.indexOf(s.id) >= 0 ? '移出比較' : '加入比較') + '</button>' +
       (s.d !== '區域未標示' ? '<button type="button" class="sx-btn" id="dArea">看 ' + esc(s.d) + ' 所有學校</button>' : '') +
-      '<a class="sx-btn" style="text-decoration:none" href="/school/' + s.id + '/">開啟完整頁面</a></div>';
+      '<a class="sx-btn" style="text-decoration:none" href="/school/' + s.id + '/">開啟完整頁面</a>' +
+      '<a class="sx-btn" style="text-decoration:none" href="/map/?s=' + s.id + '">在地圖上看</a></div>';
     drawMetric(s); drawProj(s);
     S.summaries().then(function (m) {
       var el = $('dSm'); if (!el || curId !== s.id) return;

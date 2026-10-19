@@ -173,6 +173,7 @@ window.SS = (function () {
      官方規則（Google Workspace 說明）：AI Pro for Education 是加購授權，只能指派給 18 歲以上的使用者，授權數是實際要使用的人數。
      所以：教職員 = 專任教師 + 職員；可指派的學生 = 大專全部、高中職依全國年滿 18 歲比例估算、國小與國中為 0。 */
   S.staff = function (s) { return (s.t[0] + s.t[1]) + (s.sf ? s.sf[0] + s.sf[1] : 0); };
+  S.lvName = function (lv) { return lv === '大專' ? '大專院校' : lv; };
   S.stu18 = function (s) { return s.lv === '大專' ? s.cur : s.lv === '高中職' ? Math.round(s.cur * (S.hs18 || 0)) : 0; };
   S.potential = function (s) { return S.staff(s) + S.stu18(s); };
 

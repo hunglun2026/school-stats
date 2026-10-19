@@ -21,12 +21,12 @@
   }
 
   function trend(years) {
-    var series = LEVELS.map(function (l, k) { return { name: l, color: COLORS[k], vals: years.map(function (y) { return sumYear(y, l); }) }; });
+    var series = LEVELS.map(function (l, k) { return { name: S.lvName(l), color: COLORS[k], vals: years.map(function (y) { return sumYear(y, l); }) }; });
     S.lineChart($('natTrend'), {
       years: years, series: series, zero: true, labels: true, label: '各學制學生人數逐年趨勢',
       tickFmt: function (v) { return (v / 10000) + ' 萬'; }
     });
-    $('natLegend').innerHTML = LEVELS.map(function (l, k) { return '<span><i style="background:' + COLORS[k] + '"></i>' + l + '</span>'; }).join('');
+    $('natLegend').innerHTML = LEVELS.map(function (l, k) { return '<span><i style="background:' + COLORS[k] + '"></i>' + S.lvName(l) + '</span>'; }).join('');
   }
 
   function svg0() { return $('natPyr'); }

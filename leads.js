@@ -46,7 +46,7 @@
     var opts = STATUS.map(function (x) { return '<option' + (x === st ? ' selected' : '') + '>' + x + '</option>'; }).join('');
     var tel = s.tel ? '<a href="tel:' + esc(s.tel.replace(/[^0-9+]/g, '')) + '">' + esc(s.tel) + '</a>' : '';
     var web = s.web && /^https?:/.test(s.web) ? '<a href="' + esc(s.web) + '" target="_blank" rel="noopener nofollow">網站</a>' : '';
-    return '<tr data-id="' + id + '"><td class="ld-name"><a href="/school/' + id + '/">' + esc(s.n) + '</a><small>' + s.lv + '・' + (s.pub ? '公立' : '私立') + '・' + esc(s.c + (s.d === '區域未標示' ? '' : s.d)) + '</small></td>' +
+    return '<tr data-id="' + id + '"><td class="ld-name"><a href="/school/' + id + '/">' + esc(s.n) + '</a><small>' + S.lvName(s.lv) + '・' + (s.pub ? '公立' : '私立') + '・' + esc(s.c + (s.d === '區域未標示' ? '' : s.d)) + '</small></td>' +
       '<td class="sx-num">' + (staff == null ? '無資料' : fmt(staff)) + '</td><td class="sx-num">' + fmt(S.stu18(s)) + '</td><td class="sx-num"><b>' + fmt(s.seats) + '</b></td>' +
       '<td class="ld-ct">' + [tel, web].filter(Boolean).join('　') + '</td>' +
       '<td><select class="ld-sel" data-st="' + id + '" aria-label="聯絡進度：' + esc(s.n) + '">' + opts + '</select></td>' +
@@ -76,7 +76,7 @@
     var rows = [['學校代碼', '學校', '學制', '公私立', '縣市', '鄉鎮市區', '教職員', '可指派學生（估）', '潛在席次', '電話', '網站', '地址', '聯絡進度', '備註', '更新時間']];
     list.forEach(function (s) {
       var r = store[s.id] || {};
-      rows.push([s.id, s.n, s.lv, s.pub ? '公立' : '私立', s.c, s.d, staffOf(s) == null ? '' : S.staff(s), S.stu18(s), s.seats, s.tel || '', s.web || '', s.a || '', stOf(s.id), r.note || '', r.ts ? new Date(r.ts).toLocaleString('zh-TW') : '']);
+      rows.push([s.id, s.n, S.lvName(s.lv), s.pub ? '公立' : '私立', s.c, s.d, staffOf(s) == null ? '' : S.staff(s), S.stu18(s), s.seats, s.tel || '', s.web || '', s.a || '', stOf(s.id), r.note || '', r.ts ? new Date(r.ts).toLocaleString('zh-TW') : '']);
     });
     return rows;
   }

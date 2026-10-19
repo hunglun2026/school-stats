@@ -58,7 +58,7 @@
     $('proposal').innerHTML =
       '<header class="pp-head"><img src="/img/hunglun-logo-company-light.webp" alt="鴻綸科技" width="150" height="47"><div><div class="pp-t">Google AI Pro for Education 導入評估</div><div class="pp-s">' + esc(s.n) + '（' + esc(where) + '）</div><div class="pp-d">日期：' + new Date().toLocaleDateString('zh-TW') + '</div></div></header>' +
       '<h3>一、學校概況</h3>' +
-      '<table class="sx-tbl"><tbody><tr><td>學制</td><td>' + s.lv + '・' + (s.pub ? '公立' : '私立') + '</td><td>' + S.latest + ' 學年度學生數</td><td class="sx-num">' + fmt(s.cur) + '</td></tr>' +
+      '<table class="sx-tbl"><tbody><tr><td>學制</td><td>' + S.lvName(s.lv) + '・' + (s.pub ? '公立' : '私立') + '</td><td>' + S.latest + ' 學年度學生數</td><td class="sx-num">' + fmt(s.cur) + '</td></tr>' +
       '<tr><td>班級數</td><td class="sx-num">' + (s.cl[S.iL] == null ? '無資料' : s.cl[S.iL]) + '</td><td>專任教師</td><td class="sx-num">' + (s.lv === '大專' ? '無資料' : fmt(s.t[0] + s.t[1])) + '</td></tr>' +
       '<tr><td>職員</td><td class="sx-num">' + (s.lv === '大專' ? '無資料' : fmt(s.sf ? s.sf[0] + s.sf[1] : 0)) + '</td><td>資料來源</td><td>教育部統計處</td></tr></tbody></table>' +
       '<h3>二、建議的授權範圍</h3>' + tbl +
@@ -79,7 +79,7 @@
   function summaryText() {
     var s = sc, r = calc();
     return ['【Google AI Pro for Education 導入評估：' + s.n + '】',
-      '學制與規模：' + s.lv + '，' + S.latest + ' 學年度 ' + fmt(s.cur) + ' 位學生',
+      '學制與規模：' + S.lvName(s.lv) + '，' + S.latest + ' 學年度 ' + fmt(s.cur) + ' 位學生',
       '建議授權數：' + fmt(r.seats) + ' 席（教職員 ' + fmt(r.staffSeats) + '，年滿 18 歲學生 ' + fmt(r.stuSeats) + '）',
       '教師研習：約 ' + r.sessions + ' 場，每場 ' + p.sz + ' 人、' + p.hr + ' 小時',
       r.cost == null ? '預算：請洽鴻綸科技取得當期報價' : '預算參考：' + fmt(r.cost) + ' 元（單價 ' + fmt(num(p.price, 0)) + ' 元 × ' + fmt(r.seats) + ' 席 × ' + p.yrs + ' 年，試算值）',
@@ -95,7 +95,7 @@
   function setSchool(id) {
     var s = S.byId[id]; if (!s) return;
     sc = s; p.s = id;
-    $('qtPick').hidden = false; $('qtPickName').textContent = s.n + '（' + s.lv + '・' + s.c + (s.d === '區域未標示' ? '' : s.d) + '）';
+    $('qtPick').hidden = false; $('qtPickName').textContent = s.n + '（' + S.lvName(s.lv) + '・' + s.c + (s.d === '區域未標示' ? '' : s.d) + '）';
     $('qtEmpty').hidden = true; $('qtBody').hidden = false;
     $('qS').value = '';
     render();
@@ -114,11 +114,19 @@
         if (sc) render();
       });
     });
+    var qlv = '';
+    document.querySelectorAll('[data-qlv]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        qlv = b.dataset.qlv;
+        document.querySelectorAll('[data-qlv]').forEach(function (o) { o.setAttribute('aria-pressed', o.dataset.qlv === qlv); });
+        $('qS').dispatchEvent(new Event('input'));
+      });
+    });
     $('qS').addEventListener('input', function (e) {
       var q = S.norm(e.target.value.trim()).toLowerCase(), r = $('qRes');
       if (!q) { r.innerHTML = ''; return; }
-      var hit = S.schools.filter(function (s) { return s.key.indexOf(q) >= 0 || S.norm(s.c + s.d).indexOf(q) >= 0; }).sort(function (a, b) { return b.seats - a.seats; }).slice(0, 8);
-      r.innerHTML = hit.length ? hit.map(function (s) { return '<li><button type="button" data-id="' + s.id + '">' + esc(s.n) + '<small>' + s.lv + '・' + esc(s.c + s.d) + '</small></button></li>'; }).join('') : '<li class="mp-none">找不到學校</li>';
+      var hit = S.schools.filter(function (s) { return (!qlv || s.lv === qlv) && (s.key.indexOf(q) >= 0 || S.norm(s.c + s.d).indexOf(q) >= 0); }).sort(function (a, b) { return b.seats - a.seats; }).slice(0, 8);
+      r.innerHTML = hit.length ? hit.map(function (s) { return '<li><button type="button" data-id="' + s.id + '">' + esc(s.n) + '<small>' + S.lvName(s.lv) + '・' + esc(s.c + s.d) + '</small></button></li>'; }).join('') : '<li class="mp-none">找不到學校</li>';
     });
     $('qRes').addEventListener('click', function (e) { var b = e.target.closest('[data-id]'); if (b) { $('qRes').innerHTML = ''; setSchool(b.dataset.id); } });
     $('qtChange').addEventListener('click', function () { $('qS').focus(); });

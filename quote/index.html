@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=16">
-<link rel="stylesheet" href="/stats.css?v=16">
+<link rel="stylesheet" href="/base.css?v=17">
+<link rel="stylesheet" href="/stats.css?v=17">
 </head>
 <body class="sx" data-page="quote">
 <a class="skip" href="#main">跳到主要內容</a>
@@ -61,6 +61,7 @@
         <div class="sx-field map-search"><span>學校</span>
           <input class="sx-input" id="qS" type="search" placeholder="輸入校名" autocomplete="off" aria-label="搜尋學校">
           <ul class="map-results" id="qRes"></ul></div>
+        <div class="sx-field"><span>學制</span><div class="sx-chips"><button type="button" data-qlv="" aria-pressed="true">全部</button><button type="button" data-qlv="國小" aria-pressed="false">國小</button><button type="button" data-qlv="國中" aria-pressed="false">國中</button><button type="button" data-qlv="高中職" aria-pressed="false">高中職</button><button type="button" data-qlv="大專" aria-pressed="false">大專院校</button></div></div>
         <div class="qt-pick" id="qtPick" hidden><span id="qtPickName"></span><button type="button" class="sx-reset" id="qtChange">換一所</button></div>
         <div class="sx-field"><span>教職員導入比例 <b id="qSfV">100%</b></span><input type="range" id="qSf" min="0" max="100" step="5"><input class="qt-n" type="number" id="qSfN" min="0" max="100" aria-label="教職員導入比例"></div>
         <div class="sx-field"><span>年滿 18 歲學生導入比例 <b id="qSuV">0%</b></span><input type="range" id="qSu" min="0" max="100" step="5"><input class="qt-n" type="number" id="qSuN" min="0" max="100" aria-label="學生導入比例"></div>
@@ -124,7 +125,7 @@
   });
 })();
 </script>
-<script src="/core.js?v=16"></script>
-<script src="/quote.js?v=16"></script>
+<script src="/core.js?v=17"></script>
+<script src="/quote.js?v=17"></script>
 </body>
 </html>

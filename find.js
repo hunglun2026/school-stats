@@ -50,7 +50,7 @@
   function exportCsv() {
     var rows = [['學校', '學制', '公私立', '縣市', '鄉鎮市區', S.latest + '學年度學生數', '班級數', '五年變化(%)', '專任教師', '地址', '電話', '網站']];
     view.forEach(function (s) {
-      rows.push([s.n, s.lv, s.pub ? '公立' : '私立', s.c, s.d, s.cur, s.cl[S.iL], s.ch5 == null ? '' : s.ch5.toFixed(1), s.t[0] + s.t[1], s.a || '', s.tel || '', s.web || '']);
+      rows.push([s.n, S.lvName(s.lv), s.pub ? '公立' : '私立', s.c, s.d, s.cur, s.cl[S.iL], s.ch5 == null ? '' : s.ch5.toFixed(1), s.t[0] + s.t[1], s.a || '', s.tel || '', s.web || '']);
     });
     var csv = rows.map(function (r) { return r.map(function (v) { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\r\n');
     var a = document.createElement('a');
@@ -75,7 +75,7 @@
     ul.innerHTML = view.slice(0, f.shown).map(function (s) {
       var on = cmp.indexOf(s.id) >= 0;
       return '<li class="sx-item"><button type="button" class="sx-open" data-id="' + s.id + '">' +
-        '<div><div class="sx-name">' + hl(s.n, qn) + '</div><div class="sx-meta"><span class="sx-tag">' + s.lv + '</span><span class="sx-tag">' +
+        '<div><div class="sx-name">' + hl(s.n, qn) + '</div><div class="sx-meta"><span class="sx-tag">' + S.lvName(s.lv) + '</span><span class="sx-tag">' +
         (s.pub ? '公立' : '私立') + '</span><span>' + esc(s.c) + ' ' + esc(s.d) + '</span></div></div>' +
         S.spark(s.st.slice(-11)) +
         '<div class="sx-big sx-num"><b>' + fmt(s.cur) + '</b>' + S.chg(s.ch5, '五年') + '</div></button>' +
@@ -169,7 +169,7 @@
     var rank = same.filter(function (o) { return o.cur > s.cur; }).length + 1;
     var rows = [[s.n, s.cur], ['同區平均', avg(same)], [s.c + '平均', avg(cty)]], max = Math.max.apply(null, rows.map(function (r) { return r[1]; }));
     var where = s.d === '區域未標示' ? s.c : s.c + s.d;
-    return '<p class="sub">' + esc(where) + '共有 ' + same.length + ' 所' + s.lv + '，本校學生數排第 <b>' + rank + '</b>。</p><div class="sx-rank sx-num">' +
+    return '<p class="sub">' + esc(where) + '共有 ' + same.length + ' 所' + S.lvName(s.lv) + '，本校學生數排第 <b>' + rank + '</b>。</p><div class="sx-rank sx-num">' +
       rows.map(function (r, k) {
         return '<div class="sx-rk"><span>' + esc(r[0]) + '</span><span class="bar"><i style="width:' + (r[1] / max * 100).toFixed(1) +
           '%;' + (k ? 'background:var(--muted)' : '') + '"></i></span><span>' + fmt(r[1]) + '</span></div>';
@@ -232,7 +232,7 @@
     var mapQ = encodeURIComponent(s.a || s.c + s.d + s.n);
     metric = 'st';
     $('dBody').innerHTML =
-      '<h2 id="dName">' + esc(s.n) + '</h2><div class="sx-where"><span class="sx-tag">' + s.lv + '</span><span class="sx-tag">' + (s.pub ? '公立' : '私立') + '</span><span>' + esc(s.c + ' ' + s.d) + '</span></div>' +
+      '<h2 id="dName">' + esc(s.n) + '</h2><div class="sx-where"><span class="sx-tag">' + S.lvName(s.lv) + '</span><span class="sx-tag">' + (s.pub ? '公立' : '私立') + '</span><span>' + esc(s.c + ' ' + s.d) + '</span></div>' +
       '<div class="sx-kpis sx-num">' +
       '<div class="sx-kpi"><div class="k">' + S.latest + ' 學年度學生數</div><div class="v">' + fmt(s.cur) + '</div><div class="d">' + S.chg(s.ch5, '較 ' + S.years[S.iL - 5]) + '</div></div>' +
       (cl == null ? '' : '<div class="sx-kpi"><div class="k">班級數</div><div class="v">' + cl + '</div><div class="d">平均每班 ' + (cl ? (s.cur / cl).toFixed(1) : '-') + ' 人</div></div>') +

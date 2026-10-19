@@ -23,7 +23,7 @@
 
   function popupHtml(s) {
     var v5 = s.ch5, vf = s.fut, mapQ = encodeURIComponent(s.a || s.c + s.d + s.n);
-    return '<div class="mp"><b>' + esc(s.n) + '</b><div class="mp-sub">' + s.lv + '・' + (s.pub ? '公立' : '私立') + '・' + esc(s.c + (s.d === '區域未標示' ? '' : s.d)) + '</div>' +
+    return '<div class="mp"><b>' + esc(s.n) + '</b><div class="mp-sub">' + S.lvName(s.lv) + '・' + (s.pub ? '公立' : '私立') + '・' + esc(s.c + (s.d === '區域未標示' ? '' : s.d)) + '</div>' +
       '<div class="mp-row"><span>' + S.latest + ' 學年度</span><b class="sx-num">' + fmt(s.cur) + ' 人</b></div>' +
       '<div class="mp-row"><span>近五年</span>' + S.chg(v5) + '</div>' +
       '<div class="mp-row"><span>AI Pro 潛在席次</span><b class="sx-num">' + fmt(s.seats) + '</b></div>' +

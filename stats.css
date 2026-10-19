@@ -154,3 +154,7 @@ button.sx-row:hover,.sx-row[aria-current="true"]{background:var(--soft)}
 .sx-chart text{font-size:12px}
 .sx-sum{position:sticky;top:60px;z-index:20;background:var(--bg);padding:8px 0}
 @media (max-width:860px){.sx-sum{position:static}}
+
+.sx-pnote{margin-top:10px;font-size:.95rem}
+.sx-link{border:0;background:none;color:var(--accent);padding:0 0 0 10px;font:inherit;font-size:.9rem;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.sx-gws{border:1px solid var(--line);border-left:4px solid var(--accent);border-radius:10px;padding:16px;background:var(--card)}

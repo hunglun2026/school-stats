@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=4">
-<link rel="stylesheet" href="/stats.css?v=4">
+<link rel="stylesheet" href="/base.css?v=5">
+<link rel="stylesheet" href="/stats.css?v=5">
 </head>
 <body class="sx" data-page="find">
 <a class="skip" href="#main">跳到主要內容</a>
@@ -54,6 +54,7 @@
       <button type="button" data-quick="big">學生最多的學校</button>
       <button type="button" data-quick="down">五年減少最多</button>
       <button type="button" data-quick="up">五年增加最多</button>
+      <button type="button" data-quick="fut">未來 3 年預估減少最多</button>
       <button type="button" data-quick="small">學生最少的學校</button>
     </div>
     <div class="hero-stats" id="heroStats" aria-live="polite"></div>
@@ -71,7 +72,7 @@
         <div class="sx-field"><span>公私立</span>
           <div class="sx-chips"><button type="button" data-pub="" aria-pressed="true">全部</button><button type="button" data-pub="1" aria-pressed="false">公立</button><button type="button" data-pub="0" aria-pressed="false">私立</button></div></div>
         <label class="sx-field"><span>排序</span>
-          <select id="fSort"><option value="big">學生數：多到少</option><option value="small">學生數：少到多</option><option value="down">五年減少最多</option><option value="up">五年增加最多</option><option value="name">校名</option></select></label>
+          <select id="fSort"><option value="big">學生數：多到少</option><option value="small">學生數：少到多</option><option value="down">五年減少最多</option><option value="up">五年增加最多</option><option value="fut">未來 3 年預估減少最多</option><option value="name">校名</option></select></label>
         <button type="button" class="sx-reset" id="reset">清除條件</button>
       </aside>
       <div>
@@ -85,6 +86,8 @@
       <ul>
         <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>。</li>
         <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
+        <li>未來推估：現有各年級學生逐年升級（幾乎確定），新生人數用三種情境假設（持平、依全國 6 歲在學人數近五年趨勢、依全國 5 歲相對 6 歲的落差），是簡單推估，不含遷入遷出與學區調整，也不代表任何裁併或減班決定。</li>
+        <li>導入規模估算只依在學人數與專任教師數粗估，不含價格。</li>
         <li>範圍：目前收錄國小與國中，高中職與大專的校別資料格式不同，之後再加入。「五年」指和 5 個學年度前相比。</li>
         <li>有些學校附設在高中內，名錄沒有獨立地址，區域會標示為「區域未標示」。</li>
         <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
@@ -138,7 +141,7 @@
   });
 })();
 </script>
-<script src="/core.js?v=4"></script>
-<script src="/find.js?v=4"></script>
+<script src="/core.js?v=5"></script>
+<script src="/find.js?v=5"></script>
 </body>
 </html>

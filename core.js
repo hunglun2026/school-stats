@@ -75,7 +75,8 @@ window.SS = (function () {
         if (v == null) { pen = false; return; }
         d += (pen ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(v).toFixed(1); pen = true;
       });
-      svg.appendChild(S.el('path', { d: d, fill: 'none', stroke: s.color, 'stroke-width': 2.4, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }));
+      var pa = { d: d, fill: 'none', stroke: s.color, 'stroke-width': s.w || 2.4, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }; if (s.dash) pa['stroke-dasharray'] = s.dash;
+      svg.appendChild(S.el('path', pa));
       for (var i = s.vals.length - 1; i >= 0; i--) if (s.vals[i] != null) { lastY[k] = y(s.vals[i]); break; }
     });
     if (cfg.labels) {  // 右側直接標名，相鄰不足 15px 往下推避免疊字
@@ -102,7 +103,7 @@ window.SS = (function () {
       var r = svg.getBoundingClientRect(), px = (ev.clientX - r.left) / r.width * W;
       var i = Math.max(0, Math.min(n, Math.round((px - L) / (W - L - R) * n)));
       cross.setAttribute('x1', x(i)); cross.setAttribute('x2', x(i)); cross.setAttribute('visibility', 'visible');
-      var html = '<b>' + cfg.years[i] + ' 學年度</b>';
+      var html = '<b>' + cfg.years[i] + ' 學年度' + (cfg.futureFrom != null && i >= cfg.futureFrom ? '（推估）' : '') + '</b>';
       cfg.series.forEach(function (s, k) {
         var v = s.vals[i];
         if (v == null) { dots[k].setAttribute('visibility', 'hidden'); return; }
@@ -143,27 +144,75 @@ window.SS = (function () {
     history.replaceState(null, '', location.pathname + (q ? '?' + q : ''));
   };
 
+
+  /* ---------- 未來推估 ----------
+     現有學生會逐年升級（這部分幾乎確定），只有「新生人數」要假設。三種情境：
+       持平：新生和今年一樣多
+       全國趨勢：新生每年依全國 6 歲在學人數近五年的年均變化增減
+       明顯減少：新生每年依「全國 5 歲在學人數相對 6 歲」的落差減少（下一屆已知比今年少） */
+  function rates() {
+    var n = {}; S.nat.age.forEach(function (r) {
+      if (r.y === S.latest) n[r.age] = (n[r.age] || 0) + r.n;
+    });
+    var six = {}; S.nat.age.forEach(function (r) { if (r.age === '6歲') six[r.y] = (six[r.y] || 0) + r.n; });
+    S.rate = {
+      flat: 0,
+      trend: Math.pow(six[S.latest] / six[S.latest - 5], 1 / 5) - 1,
+      drop: n['5歲'] / n['6歲'] - 1
+    };
+  }
+  S.SCEN = [
+    { k: 'flat', name: '新生持平' },
+    { k: 'trend', name: '依全國趨勢' },
+    { k: 'drop', name: '新生明顯減少' }
+  ];
+  S.HORIZON = 6;
+  // 回傳 {total:[k=0..6], floor:[k=0..6]}：total 含新生，floor 只算目前已在學的學生
+  S.project = function (s, r) {
+    var gr = s.lv === '國小' ? 6 : 3, g = [], i, k, j, tot = [], floor = [];
+    for (i = 0; i < gr; i++) g.push(s.g[i * 2] + s.g[i * 2 + 1]);
+    var entrants = g[0];
+    for (k = 0; k <= S.HORIZON; k++) {
+      var t = 0, f = 0;
+      for (j = 1; j <= gr; j++) {
+        var from = j - k;  // 今年的 from 年級，到第 k 年升到 j 年級
+        if (from >= 1) { t += g[from - 1]; f += g[from - 1]; }
+        else t += entrants * Math.pow(1 + r, k - j + 1);
+      }
+      tot.push(Math.round(t)); floor.push(Math.round(f));
+    }
+    return { total: tot, floor: floor };
+  };
+
   /* ---------- 載入資料 ---------- */
   function prepare(d) {
     S.years = d.years; S.latest = d.latest; S.iL = d.years.indexOf(d.latest);
     S.built = d.built;
     S.schools = d.schools;
     S.byId = {};
+    S.futPending = true;
     d.schools.forEach(function (s) {
       s.cur = s.st[S.iL];
       s.base = s.st[S.iL - 5];
       s.ch5 = s.base ? S.pct(s.cur, s.base) : null;
       s.key = S.norm(s.n).toLowerCase();
+      s.fut = null;
       S.byId[s.id] = s;
     });
   }
 
+  S.fillFuture = function () {
+    if (!S.rate) return;
+    // 太小的學校（30 人以下）百分比跳動太大，不參與「未來減少最多」排序
+    S.schools.forEach(function (s) { var p = S.project(s, S.rate.trend).total; s.fut = s.cur >= 30 && s.g[0] + s.g[1] > 0 ? S.pct(p[3], p[0]) : null; });  // 沒有一年級的學校（只收高年級）減少是結構造成，也不排
+  };
+
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=3').then(function (r) { return r.json(); })];
-    if (page === 'national') need.push(fetch('/data.json?v=3').then(function (r) { return r.json(); }));
+    var need = [fetch('/schools.json?v=5').then(function (r) { return r.json(); })];
+    if (page === 'national' || page === 'find') need.push(fetch('/data.json?v=5').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
-      prepare(res[0]); S.nat = res[1];
+      prepare(res[0]); S.nat = res[1]; if (S.nat) { rates(); S.fillFuture(); }
       var el = S.$('built'); if (el) el.textContent = S.built;
       var hs = S.$('heroStats');
       if (hs) {

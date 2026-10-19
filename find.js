@@ -19,6 +19,7 @@
       small: function (a, b) { return a.cur - b.cur; },
       down: function (a, b) { return (a.ch5 == null) - (b.ch5 == null) || a.ch5 - b.ch5; },
       up: function (a, b) { return (a.ch5 == null) - (b.ch5 == null) || b.ch5 - a.ch5; },
+      fut: function (a, b) { return (a.fut == null) - (b.fut == null) || a.fut - b.fut; },
       name: function (a, b) { return a.n.localeCompare(b.n, 'zh-Hant'); }
     };
     return out.sort(by[f.sort]);
@@ -46,13 +47,26 @@
     return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + qn.length)) + '</mark>' + esc(name.slice(i + qn.length));
   }
 
+  function exportCsv() {
+    var rows = [['學校', '學制', '公私立', '縣市', '鄉鎮市區', S.latest + '學年度學生數', '班級數', '五年變化(%)', '專任教師', '地址', '電話', '網站']];
+    view.forEach(function (s) {
+      rows.push([s.n, s.lv, s.pub ? '公立' : '私立', s.c, s.d, s.cur, s.cl[S.iL], s.ch5 == null ? '' : s.ch5.toFixed(1), s.t[0] + s.t[1], s.a || '', s.tel || '', s.web || '']);
+    });
+    var csv = rows.map(function (r) { return r.map(function (v) { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\r\n');
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' }));
+    a.download = '中小學人數_' + S.latest + '學年度.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+  }
+
   function render() {
     sync();
     view = filtered();
     var qn = S.norm(f.q.trim()).toLowerCase(), total = 0, cur5 = 0, base5 = 0;
     view.forEach(function (s) { total += s.cur; if (s.base) { cur5 += s.cur; base5 += s.base; } });
     $('sum').innerHTML = '<strong>' + fmt(view.length) + ' 所學校</strong><span class="sx-num">合計 ' + fmt(total) + ' 人' +
-      (base5 ? '，較 ' + S.years[S.iL - 5] + ' 學年度 ' + S.chg(S.pct(cur5, base5)) : '') + '</span>';
+      (base5 ? '，較 ' + S.years[S.iL - 5] + ' 學年度 ' + S.chg(S.pct(cur5, base5)) : '') + ' <button type="button" class="sx-link" id="exp">匯出清單</button></span>';
+    $('exp').onclick = exportCsv;
     var ul = $('list');
     if (!view.length) {
       ul.innerHTML = '<li class="sx-empty">找不到符合條件的學校。試試縮短校名，或按「清除條件」。</li>';
@@ -161,6 +175,41 @@
       }).join('') + '</div>';
   }
 
+
+  var PCOL = ['var(--c3)', 'var(--c2)', 'var(--c5)'];
+  function projHtml(s) {
+    var sc = S.SCEN.map(function (x) { return { n: x.name, r: S.rate[x.k], p: S.project(s, S.rate[x.k]) }; });
+    var cl = s.cl[S.iL], per = cl ? s.cur / cl : 0, end = S.latest + S.HORIZON;
+    var t = sc[1].p.total, last = t[S.HORIZON], fl3 = sc[0].p.floor[3];
+    var classes = per ? Math.max(1, Math.round(last / per)) : null;
+    return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生會逐年升級，所以這一段幾乎確定；只有新生人數要假設，下面用三種情境。</p>' +
+      '<div class="sx-chart" id="pChart"></div><div class="sx-legend" id="pLegend"></div>' +
+      '<p class="sx-pnote">依全國趨勢（新生每年 ' + S.sgn(S.rate.trend * 100) + '）推估，<b>' + end + ' 學年度約 ' + fmt(last) + ' 人</b>' + (classes ? '，約 ' + classes + ' 班（以目前每班 ' + per.toFixed(1) + ' 人估）' : '') +
+      '，較今年 ' + S.chg(S.pct(last, s.cur)) + '。其中 ' + fmt(fl3) + ' 人是 3 年後（' + (S.latest + 3) + ' 學年度）仍在學的現有學生，其餘是之後入學的新生。</p>' +
+      '<p class="sub">這是用在學人數做的簡單推估，不含遷入遷出、學區調整、轉學與留級，也不代表任何裁併或減班決定。</p></div>';
+  }
+  function drawProj(s) {
+    var yrs = S.years.slice(), k;
+    for (k = 1; k <= S.HORIZON; k++) yrs.push(S.latest + k);
+    var pad = function (arr, from) { var o = []; for (var i = 0; i < yrs.length; i++) o.push(i < from ? null : arr[i - from]); return o; };
+    var series = [{ name: '實際', color: 'var(--c1)', w: 2.8, vals: s.st.concat(new Array(S.HORIZON).fill(null)) },
+      { name: '已在學者', color: 'var(--muted)', dash: '2 4', vals: pad(S.project(s, 0).floor, S.iL) }];
+    S.SCEN.forEach(function (x, i) { series.push({ name: x.name, color: PCOL[i], dash: '6 4', vals: pad(S.project(s, S.rate[x.k]).total, S.iL) }); });
+    S.lineChart($('pChart'), { zero: true, years: yrs, series: series, futureFrom: S.iL + 1, label: s.n + '未來推估', valFmt: function (v) { return fmt(v) + ' 人'; } });
+    $('pLegend').innerHTML = series.map(function (x) { return '<span><i style="background:' + x.color + '"></i>' + x.name + '</span>'; }).join('');
+  }
+  function gwsHtml(s) {
+    var tch = s.t[0] + s.t[1];
+    return '<div class="sx-sec sx-gws"><h3>導入 Google Workspace for Education 的規模估算</h3>' +
+      '<p class="sub">依這所學校的在學人數與專任教師數粗估，方便評估導入範圍。</p>' +
+      '<div class="sx-kpis sx-num"><div class="sx-kpi"><div class="k">學生帳號</div><div class="v">' + fmt(s.cur) + '</div></div>' +
+      '<div class="sx-kpi"><div class="k">教師帳號（專任）</div><div class="v">' + (tch ? fmt(tch) : '無資料') + '</div></div>' +
+      '<div class="sx-kpi"><div class="k">每人一台 Chromebook</div><div class="v">' + fmt(s.cur) + ' 台</div><div class="d">班級共用一般只需其中一部分</div></div>' +
+      '<div class="sx-kpi"><div class="k">班級數（Classroom 課程）</div><div class="v">' + s.cl[S.iL] + '</div><div class="d">一班至少一個</div></div></div>' +
+      '<p class="sub" style="margin-top:8px">只是帳號與設備數量的概算，不含職員與行政帳號，授權方案與費用請洽我們。鴻綸科技是 Google for Education Professional Development Partner，可協助評估、導入與教師研習。</p>' +
+      '<a class="sx-btn primary" style="display:inline-block;margin-top:6px;text-decoration:none" href="https://www.hunglun.com/contact" target="_blank" rel="noopener">詢問 ' + esc(s.n) + ' 的導入方案</a></div>';
+  }
+
   function drawMetric(s) {
     var vals, vf = fmt, label;
     if (metric === 'st') { vals = s.st; label = '學生數'; }
@@ -186,6 +235,7 @@
       '<div class="sx-sec"><h3>歷年變化</h3><div class="sx-seg" id="dSeg"><button type="button" data-m="st" aria-pressed="true">學生數</button><button type="button" data-m="cl" aria-pressed="false">班級數</button><button type="button" data-m="avg" aria-pressed="false">每班人數</button></div><div class="sx-chart" id="dChart"></div></div>' +
       '<div class="sx-sec"><h3>各年級男女人數</h3><p class="sub">' + S.latest + ' 學年度</p>' + gradeBars(s) + '</div>' +
       '<div class="sx-sec"><h3>和附近學校比</h3>' + rankBlock(s) + '</div>' +
+      projHtml(s) + gwsHtml(s) +
       '<div class="sx-sec"><h3>聯絡資訊</h3><div class="sx-contact">' +
       (s.a ? '<div>地址：<a href="https://www.google.com/maps/search/?api=1&query=' + mapQ + '" target="_blank" rel="noopener">' + esc(s.a) + '</a></div>' : '') +
       (s.tel ? '<div>電話：<a href="tel:' + esc(s.tel.replace(/[^\d+]/g, '')) + '">' + esc(s.tel) + '</a></div>' : '') +
@@ -193,7 +243,7 @@
       (!s.a && !s.tel ? '<div>這所學校附設在其他學校內，名錄沒有獨立的聯絡資料。</div>' : '') + '</div></div>' +
       '<div class="sx-actions"><button type="button" class="sx-btn primary" id="dCmp" data-id="' + s.id + '">' + (cmp.indexOf(s.id) >= 0 ? '移出比較' : '加入比較') + '</button>' +
       (s.d !== '區域未標示' ? '<button type="button" class="sx-btn" id="dArea">看 ' + esc(s.d) + ' 所有學校</button>' : '') + '</div>';
-    drawMetric(s);
+    drawMetric(s); drawProj(s);
     $('dSeg').onclick = function (e) {
       var b = e.target.closest('button'); if (!b) return;
       metric = b.dataset.m;

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var t=localStorage.getItem('hunglun-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<title>全國中小學人數查詢｜鴻綸科技</title>
+<meta name="description" content="查全國 3,600 多所國小與國中的學生人數、班級數與近五年變化，可依縣市、鄉鎮市區篩選並比較學校。教育部開放資料，鴻綸科技製作。">
+<link rel="canonical" href="https://school.hunglun.com/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="全國中小學人數查詢｜鴻綸科技">
+<meta property="og:description" content="輸入校名，看每一所國小、國中的學生人數怎麼變。可篩選縣市與鄉鎮、比較學校。">
+<meta property="og:url" content="https://school.hunglun.com/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css?v=1">
+<link rel="stylesheet" href="/stats.css?v=3">
+</head>
+<body class="sx">
+<a class="skip" href="#main">跳到主要內容</a>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="hd-logo" href="https://www.hunglun.com/" aria-label="鴻綸科技 Hunglun Technology"></a>
+    <span class="hd-name">全國中小學人數查詢</span>
+    <span class="hd-sp"></span>
+    <a class="hd-link" href="https://www.hunglun.com/tools">更多免費工具</a>
+    <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
+    <button type="button" class="hd-btn" id="themeBtn" aria-label="切換深色或淺色模式">深色模式</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><i></i>TAIWAN　·　MOE OPEN DATA</div>
+    <h1>全國中小學<br>人數查詢</h1>
+    <p class="lead">輸入校名，或一路選到鄉鎮市區，看每一所國小、國中的學生人數怎麼變。</p>
+    <div class="hero-search">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="q" type="search" placeholder="輸入校名或地區，例如：新營、文賢、台南" autocomplete="off" aria-label="搜尋學校">
+    </div>
+    <div class="hero-chips" aria-label="快速查詢">
+      <button type="button" data-quick="big">學生最多的學校</button>
+      <button type="button" data-quick="down">五年減少最多</button>
+      <button type="button" data-quick="up">五年增加最多</button>
+      <button type="button" data-quick="small">學生最少的學校</button>
+    </div>
+    <div class="hero-stats" id="heroStats" aria-live="polite"></div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap" id="app">
+    <div class="sx-tabs" role="tablist" aria-label="功能">
+      <button type="button" role="tab" id="btn-find" aria-selected="true" aria-controls="tab-find">找學校</button>
+      <button type="button" role="tab" id="btn-region" aria-selected="false" aria-controls="tab-region">區域排行</button>
+      <button type="button" role="tab" id="btn-national" aria-selected="false" aria-controls="tab-national">全國概況</button>
+    </div>
+
+    <div id="tab-find" role="tabpanel" aria-labelledby="btn-find">
+      <div class="sx-find">
+        <aside class="sx-filters" aria-label="篩選條件">
+          <label class="sx-field"><span>縣市</span><select id="fCounty"></select></label>
+          <label class="sx-field"><span>鄉鎮市區</span><select id="fDistrict" disabled><option value="">先選縣市</option></select></label>
+          <div class="sx-field"><span>學制</span>
+            <div class="sx-chips"><button type="button" data-lv="" aria-pressed="true">全部</button><button type="button" data-lv="國小" aria-pressed="false">國小</button><button type="button" data-lv="國中" aria-pressed="false">國中</button></div></div>
+          <div class="sx-field"><span>公私立</span>
+            <div class="sx-chips"><button type="button" data-pub="" aria-pressed="true">全部</button><button type="button" data-pub="1" aria-pressed="false">公立</button><button type="button" data-pub="0" aria-pressed="false">私立</button></div></div>
+          <label class="sx-field"><span>排序</span>
+            <select id="fSort"><option value="big">學生數：多到少</option><option value="small">學生數：少到多</option><option value="down">五年減少最多</option><option value="up">五年增加最多</option><option value="name">校名</option></select></label>
+          <button type="button" class="sx-reset" id="reset">清除條件</button>
+        </aside>
+        <div>
+          <div class="sx-sum" id="sum" aria-live="polite">資料載入中…</div>
+          <ul class="sx-list" id="list"></ul>
+          <button type="button" class="sx-more" id="more" hidden></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tab-region" role="tabpanel" aria-labelledby="btn-region" hidden>
+      <div class="sx-controls">
+        <div class="sx-field"><span>學制</span>
+          <div class="sx-chips"><button type="button" data-rlv="" aria-pressed="true">國小＋國中</button><button type="button" data-rlv="國小" aria-pressed="false">國小</button><button type="button" data-rlv="國中" aria-pressed="false">國中</button></div></div>
+      </div>
+      <div class="sx-region">
+        <div class="sx-card"><h2>縣市</h2><p class="sub">依學生數排序，右側數字是近五年變化。</p><ul class="sx-rows" id="regCounties"></ul></div>
+        <div class="sx-card"><h2 id="regTitle">鄉鎮市區</h2><p class="sub" id="regSub"></p><ul class="sx-rows" id="regDistricts"></ul></div>
+      </div>
+    </div>
+
+    <div id="tab-national" role="tabpanel" aria-labelledby="btn-national" hidden>
+      <div class="sx-controls"><label class="sx-field"><span>學年度</span><select id="natYear"></select></label></div>
+      <div class="sx-ngrid sx-num"><div class="sx-kpi" id="nk1"></div><div class="sx-kpi" id="nk2"></div><div class="sx-kpi" id="nk3"></div></div>
+      <div class="sx-card sx-ncard">
+        <h2>各學制學生人數趨勢</h2><p class="sub">104 學年度起每年一點，滑過圖面可看當年各學制人數。</p>
+        <div class="sx-chart" id="natTrend"></div><div class="sx-legend" id="natLegend"></div>
+      </div>
+      <div class="sx-card sx-ncard">
+        <h2>年齡與性別分布</h2><p class="sub">3 歲到 29 歲逐歲顯示，30 歲以上合併成一組（所以長條特別長，不是單一年齡）。人數是所有學制加總。</p>
+        <svg id="natPyr" viewBox="0 0 620 520" role="img" aria-label="在學人數年齡與性別金字塔圖" style="width:100%;height:auto"></svg>
+      </div>
+    </div>
+
+    <div class="sx-src">
+      <h2 style="font-size:1.1rem;font-weight:600">資料來源與說明</h2>
+      <ul>
+        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>，以及<a href="https://data.gov.tw/dataset/40121" rel="noopener">各級學校縣市別學生人數</a>、<a href="https://data.gov.tw/dataset/31438" rel="noopener">年齡別學生人數</a>。</li>
+        <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
+        <li>範圍：目前收錄國小與國中，高中職與大專的校別資料格式不同，之後再加入。「五年」指和 5 個學年度前相比。</li>
+        <li>有些學校附設在高中內，名錄沒有獨立地址，區域會標示為「區域未標示」。</li>
+        <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本頁隨之重新產生。</li>
+        <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="sx-tray" id="tray" hidden>
+  <span id="trayPills"></span><span id="trayMsg" role="status" style="font-size:.85rem;color:var(--muted)"></span>
+  <button type="button" class="sx-btn primary" id="goCmp"></button><button type="button" class="sx-btn" id="clearCmp">清除</button>
+</div>
+
+<div class="sx-drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="dName" hidden>
+  <div class="sx-scrim"></div>
+  <div class="sx-panel"><button type="button" class="sx-x" aria-label="關閉">×</button><div id="dBody"></div></div>
+</div>
+
+<div class="sx-drawer" id="cmp" role="dialog" aria-modal="true" aria-labelledby="cmpTitle" hidden>
+  <div class="sx-scrim"></div>
+  <div class="sx-panel"><button type="button" class="sx-x" aria-label="關閉">×</button>
+    <h2 id="cmpTitle">學校比較</h2>
+    <div class="sx-sec"><div class="sx-seg" id="cmpSeg"><button type="button" data-m="abs" aria-pressed="true">學生人數</button><button type="button" data-m="idx" aria-pressed="false">相對變化</button></div>
+      <p class="sub" id="cmpNote"></p><div class="sx-chart" id="cmpChart"></div><div class="sx-legend" id="cmpLegend"></div></div>
+    <div class="sx-sec" id="cmpBody" style="overflow-x:auto"></div>
+  </div>
+</div>
+
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo" role="img" aria-label="鴻綸科技 x Google for Education Professional Development Partner"></div>
+    <p>© 2026 鴻綸科技股份有限公司. All Rights Reserved.</p>
+    <p>Hunglun Technology Co., Ltd.　·　<a href="https://www.hunglun.com/">www.hunglun.com</a></p>
+    <p class="legal">本系統之軟體架構、程式碼、視覺設計及文字內容均受著作權法與智慧財產權保護。未經本公司正式書面授權，嚴禁進行任何形式之重製、改作、散布、公開傳輸或商業營利行為，違者將依法追究相關法律責任。</p>
+    <p class="legal">本站不蒐集任何個人資料。統計數字來自教育部公開資料，以教育部公布為準。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('themeBtn'),r=document.documentElement;
+  function label(){b.textContent=r.getAttribute('data-theme')==='dark'?'淺色模式':'深色模式';}
+  label();
+  b.addEventListener('click',function(){
+    var d=r.getAttribute('data-theme')==='dark';
+    if(d)r.removeAttribute('data-theme');else r.setAttribute('data-theme','dark');
+    try{localStorage.setItem('hunglun-theme',d?'light':'dark');}catch(e){}
+    label();
+  });
+})();
+</script>
+<script src="/core.js?v=3"></script>
+<script src="/find.js?v=3"></script>
+<script src="/region.js?v=3"></script>
+<script src="/national.js?v=3"></script>
+</body>
+</html>

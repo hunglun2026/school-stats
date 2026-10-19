@@ -49,11 +49,13 @@ img{max-width:100%;height:auto}
 .hero-stats b{color:var(--text);font-size:1.25rem;font-weight:700;margin-right:4px;font-variant-numeric:tabular-nums}
 
 /* 頁尾 */
-.ft{border-top:1px solid var(--line);padding:40px 0 48px;text-align:center;color:var(--muted);font-size:.88rem}
-.ft-logo{display:block;width:min(360px,80%);aspect-ratio:3.4/1;margin:0 auto 18px;background:url("img/logo-light.png") center/contain no-repeat}
+.ft{border-top:1px solid var(--line);padding:22px 0 26px;color:var(--muted);font-size:.86rem}
+.ft .wrap{display:flex;align-items:center;gap:12px 36px;flex-wrap:wrap}
+.ft-logo{display:block;width:260px;aspect-ratio:3.4/1;flex:none;background:url("img/logo-light.png") left center/contain no-repeat}
 :root[data-theme="dark"] .ft-logo{background-image:url("img/logo-dark.png")}
-.ft p{margin:6px auto;max-width:46em}
-.ft .legal{font-size:.8rem}
+.ft-text{flex:1 1 420px;min-width:0}
+.ft p{margin:3px 0}
+.ft .legal{font-size:.78rem;line-height:1.6}
 .ft a{color:var(--muted)}
 .sub{color:var(--muted)}
 

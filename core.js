@@ -201,6 +201,12 @@ window.SS = (function () {
     });
   }
 
+  // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
+  S.summaries = function () {
+    if (!S._sum) S._sum = fetch('/summaries.json?v=8').then(function (r) { return r.json(); });
+    return S._sum;
+  };
+
   S.fillFuture = function () {
     if (!S.rate) return;
     // 太小的學校（30 人以下）百分比跳動太大，不參與「未來減少最多」排序

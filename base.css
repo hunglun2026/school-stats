@@ -74,3 +74,4 @@ img{max-width:100%;height:auto}
   .hd-nav a[aria-current="page"]:after{bottom:-3px}
   .hero{padding:30px 0 22px}
 }
+@media (max-width:560px){.hd-nav{scrollbar-width:none;gap:0}.hd-nav::-webkit-scrollbar{display:none}.hd-nav a{padding:8px 9px;font-size:.92rem}.hd-nav a[aria-current="page"]:after{left:9px;right:9px}}

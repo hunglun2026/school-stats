@@ -232,6 +232,7 @@
       '<div class="sx-kpi"><div class="k">班級數</div><div class="v">' + cl + '</div><div class="d">平均每班 ' + (cl ? (s.cur / cl).toFixed(1) : '-') + ' 人</div></div>' +
       '<div class="sx-kpi"><div class="k">專任教師</div><div class="v">' + tch + '</div><div class="d">' + (tch ? '每位教師對應 ' + (s.cur / tch).toFixed(1) + ' 位學生' : '無資料') + '</div></div>' +
       '<div class="sx-kpi"><div class="k">男女比例</div><div class="v">' + mp + ' : ' + (100 - mp) + '</div><div class="d">男 ' + fmt(males) + '，女 ' + fmt(s.cur - males) + '</div></div></div>' +
+      '<div class="sx-sec"><h3>白話解讀</h3><div class="sx-sumtext" id="dSm">載入中…</div><p class="sub">由公開在學人數自動整理，沒有人工評論。</p></div>' +
       '<div class="sx-sec"><h3>歷年變化</h3><div class="sx-seg" id="dSeg"><button type="button" data-m="st" aria-pressed="true">學生數</button><button type="button" data-m="cl" aria-pressed="false">班級數</button><button type="button" data-m="avg" aria-pressed="false">每班人數</button></div><div class="sx-chart" id="dChart"></div></div>' +
       '<div class="sx-sec"><h3>各年級男女人數</h3><p class="sub">' + S.latest + ' 學年度</p>' + gradeBars(s) + '</div>' +
       '<div class="sx-sec"><h3>和附近學校比</h3>' + rankBlock(s) + '</div>' +
@@ -242,8 +243,13 @@
       (s.web && /^https?:\/\//.test(s.web) ? '<div>網站：<a href="' + esc(s.web) + '" target="_blank" rel="noopener">' + esc(s.web) + '</a></div>' : '') +
       (!s.a && !s.tel ? '<div>這所學校附設在其他學校內，名錄沒有獨立的聯絡資料。</div>' : '') + '</div></div>' +
       '<div class="sx-actions"><button type="button" class="sx-btn primary" id="dCmp" data-id="' + s.id + '">' + (cmp.indexOf(s.id) >= 0 ? '移出比較' : '加入比較') + '</button>' +
-      (s.d !== '區域未標示' ? '<button type="button" class="sx-btn" id="dArea">看 ' + esc(s.d) + ' 所有學校</button>' : '') + '</div>';
+      (s.d !== '區域未標示' ? '<button type="button" class="sx-btn" id="dArea">看 ' + esc(s.d) + ' 所有學校</button>' : '') +
+      '<a class="sx-btn" style="text-decoration:none" href="/school/' + s.id + '/">開啟完整頁面</a></div>';
     drawMetric(s); drawProj(s);
+    S.summaries().then(function (m) {
+      var el = $('dSm'); if (!el || curId !== s.id) return;
+      el.innerHTML = (m[s.id] || '').split(/(?<=。)/).filter(Boolean).map(function (t) { return '<p>' + esc(t) + '</p>'; }).join('') || '暫無解讀';
+    }).catch(function () { var el = $('dSm'); if (el) el.textContent = '解讀載入失敗'; });
     $('dSeg').onclick = function (e) {
       var b = e.target.closest('button'); if (!b) return;
       metric = b.dataset.m;

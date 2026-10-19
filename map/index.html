@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=13">
-<link rel="stylesheet" href="/stats.css?v=13">
+<link rel="stylesheet" href="/base.css?v=14">
+<link rel="stylesheet" href="/stats.css?v=14">
 <link rel="stylesheet" href="/vendor/leaflet.css?v=1">
 </head>
 <body class="sx" data-page="map">
@@ -34,8 +34,10 @@
       <a href="/region/">區域排行</a>
       <a href="/national/">全國概況</a>
       <a href="/area/">學校名錄</a>
+      <a href="/leads/">推廣名單</a>
     </nav>
     <span class="hd-sp"></span>
+    <a class="hd-link" href="/quote/">導入試算</a>
     <a class="hd-link" href="/method/">算法說明</a>
     <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
     <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
@@ -48,7 +50,7 @@
 <section class="pg-head pg-slim">
   <div class="wrap">
     <h1>學校地圖</h1>
-    <p class="lead">哪裡的學校在變少？橘色是學生減少、藍色是增加，圓圈越大學生越多。</p>
+    <p class="lead">選擇顏色代表什麼：人數變化（橘色減少、藍色增加）、未來推估，或 AI Pro 潛在席次（顏色越深席次越多）。圓圈越大學生越多。</p>
   </div>
 </section>
 
@@ -62,7 +64,7 @@
       <div class="sx-field"><span>學制</span>
         <div class="sx-chips"><button type="button" data-mlv="" aria-pressed="true">全部</button><button type="button" data-mlv="國小" aria-pressed="false">國小</button><button type="button" data-mlv="國中" aria-pressed="false">國中</button><button type="button" data-mlv="高中職" aria-pressed="false">高中職</button><button type="button" data-mlv="大專" aria-pressed="false">大專</button></div></div>
       <div class="sx-field"><span>顏色代表</span>
-        <div class="sx-chips"><button type="button" data-mmode="ch5" aria-pressed="true">近五年變化</button><button type="button" data-mmode="fut" aria-pressed="false">未來 3 年推估</button></div></div>
+        <div class="sx-chips"><button type="button" data-mmode="ch5" aria-pressed="true">近五年變化</button><button type="button" data-mmode="fut" aria-pressed="false">未來 3 年推估</button><button type="button" data-mmode="seats" aria-pressed="false">AI Pro 潛在席次</button></div></div>
     </div>
     <div class="map-stage">
       <div id="map" role="application" aria-label="全國學校地圖"></div>
@@ -110,7 +112,7 @@
 })();
 </script>
 <script src="/vendor/leaflet.js?v=1"></script>
-<script src="/core.js?v=13"></script>
-<script src="/map.js?v=13"></script>
+<script src="/core.js?v=14"></script>
+<script src="/map.js?v=14"></script>
 </body>
 </html>

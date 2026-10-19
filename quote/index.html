@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var t=localStorage.getItem('hunglun-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<title>導入試算與提案｜Google AI Pro for Education｜鴻綸科技</title>
+<meta name="description" content="挑一所學校，估算 Google AI Pro for Education 的授權數、教師研習場次與預算參考，並產生可列印的導入提案。">
+<link rel="canonical" href="https://school.hunglun.com/quote/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="導入試算與提案｜Google AI Pro for Education｜鴻綸科技">
+<meta property="og:description" content="挑一所學校，估算 Google AI Pro for Education 的授權數、教師研習場次與預算參考，並產生可列印的導入提案。">
+<meta property="og:url" content="https://school.hunglun.com/quote/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css?v=14">
+<link rel="stylesheet" href="/stats.css?v=14">
+</head>
+<body class="sx" data-page="quote">
+<a class="skip" href="#main">跳到主要內容</a>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="hd-logo" href="https://www.hunglun.com/" aria-label="鴻綸科技 Hunglun Technology"></a>
+    <nav class="hd-nav" aria-label="功能">
+      <a href="/">找學校</a>
+      <a href="/map/">學校地圖</a>
+      <a href="/region/">區域排行</a>
+      <a href="/national/">全國概況</a>
+      <a href="/area/">學校名錄</a>
+      <a href="/leads/">推廣名單</a>
+    </nav>
+    <span class="hd-sp"></span>
+    <a class="hd-link" href="/quote/">導入試算</a>
+    <a class="hd-link" href="/method/">算法說明</a>
+    <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
+    <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
+    <button type="button" class="hd-btn" id="themeBtn" aria-label="切換深色或淺色模式">深色模式</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="pg-head pg-slim no-print">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="麵包屑"><a href="/">找學校</a> ／ 導入試算</nav>
+    <h1>導入試算與提案</h1>
+    <p class="lead">挑一所學校，調整導入對象與比例，得到授權數、教師研習場次與預算參考，並產生可以列印或存成 PDF 的提案。</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="qt-grid">
+      <aside class="sx-filters qt-controls no-print" aria-label="試算條件">
+        <div class="sx-field map-search"><span>學校</span>
+          <input class="sx-input" id="qS" type="search" placeholder="輸入校名" autocomplete="off" aria-label="搜尋學校">
+          <ul class="map-results" id="qRes"></ul></div>
+        <div class="qt-pick" id="qtPick" hidden><span id="qtPickName"></span><button type="button" class="sx-reset" id="qtChange">換一所</button></div>
+        <div class="sx-field"><span>教職員導入比例 <b id="qSfV">100%</b></span><input type="range" id="qSf" min="0" max="100" step="5"><input class="qt-n" type="number" id="qSfN" min="0" max="100" aria-label="教職員導入比例"></div>
+        <div class="sx-field"><span>年滿 18 歲學生導入比例 <b id="qSuV">0%</b></span><input type="range" id="qSu" min="0" max="100" step="5"><input class="qt-n" type="number" id="qSuN" min="0" max="100" aria-label="學生導入比例"></div>
+        <label class="sx-field" id="qtManual" hidden><span>教職員人數（大專教育部沒有公開，請填）</span><input class="sx-input qt-plain" type="number" id="qXs" min="0"></label>
+        <label class="sx-field"><span>每授權每年單價（元，選填）</span><input class="sx-input qt-plain" type="number" id="qPrice" min="0" placeholder="填入你取得的報價"></label>
+        <label class="sx-field"><span>訂閱年數</span><select id="qYrs"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></label>
+        <label class="sx-field"><span>研習每場人數</span><input class="sx-input qt-plain" type="number" id="qSz" min="5"></label>
+        <label class="sx-field"><span>研習每場小時數</span><input class="sx-input qt-plain" type="number" id="qHr" min="1"></label>
+        <p class="sub">官方沒有公開單價，所以這裡不放任何價格，由你填入取得的報價再算總額。</p>
+      </aside>
+      <div>
+        <div class="sx-empty" id="qtEmpty">先在左邊挑一所學校。也可以從學校詳情或推廣名單按「試算提案」進來。</div>
+        <div id="qtBody" hidden>
+          <div class="no-print" id="qtOut"></div>
+          <div class="qt-actions no-print">
+            <button type="button" class="sx-btn primary" id="qtPrint">列印或存成 PDF</button>
+            <button type="button" class="sx-btn" id="qtLink">複製分享連結</button>
+            <button type="button" class="sx-btn" id="qtText">複製摘要文字</button>
+            <button type="button" class="sx-btn" id="qtQuote">帶著試算去索取報價</button>
+          </div>
+          <article class="pp" id="proposal" hidden></article>
+        </div>
+      </div>
+    </div>
+    <div class="sx-src">
+      <h2>資料來源與說明</h2>
+      <ul>
+        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>、<a href="https://data.gov.tw/dataset/6238" rel="noopener">高級中等學校校別資料</a>、<a href="https://data.gov.tw/dataset/6089" rel="noopener">一般高級中等學校名錄</a>、<a href="https://data.gov.tw/dataset/6231" rel="noopener">大專院校校別學生數</a>。</li>
+        <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
+        <li>規則來自 Google 官方說明與鴻綸科技官網的 <a href="https://www.hunglun.com/services/google-ai-pro">Google AI Pro for Education 授權導入</a>說明：加購項目、限 18 歲以上、授權數為實際使用人數、教職員要一併編列。</li>
+        <li>試算結果是概算，授權與研習分開列，不是報價；實際功能、資格與計價條件請以 Google 官方或授權夥伴當期公告為準。</li>
+        <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
+        <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo" role="img" aria-label="鴻綸科技 x Google for Education Professional Development Partner"></div>
+    <p>© 2026 鴻綸科技股份有限公司. All Rights Reserved.</p>
+    <p>Hunglun Technology Co., Ltd.　·　<a href="https://www.hunglun.com/">www.hunglun.com</a></p>
+    <p class="legal">本系統之軟體架構、程式碼、視覺設計及文字內容均受著作權法與智慧財產權保護。未經本公司正式書面授權，嚴禁進行任何形式之重製、改作、散布、公開傳輸或商業營利行為，違者將依法追究相關法律責任。</p>
+    <p class="legal">本站不蒐集任何個人資料。統計數字來自教育部公開資料，以教育部公布為準。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('themeBtn'),r=document.documentElement;
+  function label(){b.textContent=r.getAttribute('data-theme')==='dark'?'淺色模式':'深色模式';}
+  label();
+  b.addEventListener('click',function(){
+    var d=r.getAttribute('data-theme')==='dark';
+    if(d)r.removeAttribute('data-theme');else r.setAttribute('data-theme','dark');
+    try{localStorage.setItem('hunglun-theme',d?'light':'dark');}catch(e){}
+    label();
+  });
+})();
+</script>
+<script src="/core.js?v=14"></script>
+<script src="/quote.js?v=14"></script>
+</body>
+</html>

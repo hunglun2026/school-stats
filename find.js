@@ -205,17 +205,16 @@
     $('pLegend').innerHTML = series.map(function (x) { return '<span><i style="background:' + x.color + '"></i>' + x.name + '</span>'; }).join('');
   }
   function gwsHtml(s) {
-    var tch = s.t[0] + s.t[1];
-    return '<div class="sx-sec sx-gws"><h3>導入 Google Workspace for Education 的規模估算</h3>' +
-      '<p class="sub">依這所學校的在學人數與專任教師數粗估，方便評估導入範圍。</p>' +
-      '<div class="sx-kpis sx-num"><div class="sx-kpi"><div class="k">學生帳號</div><div class="v">' + fmt(s.cur) + '</div></div>' +
-      '<div class="sx-kpi"><div class="k">教師帳號（專任）</div><div class="v">' + (tch ? fmt(tch) : '無資料') + '</div></div>' +
-      (s.lv === '大專' ? '' : '<div class="sx-kpi"><div class="k">每人一台 Chromebook</div><div class="v">' + fmt(s.cur) + ' 台</div><div class="d">班級共用一般只需其中一部分</div></div>' +
-      '<div class="sx-kpi"><div class="k">班級數（Classroom 課程）</div><div class="v">' + s.cl[S.iL] + '</div><div class="d">一班至少一個</div></div>') + '</div>' +
-      '<p class="sub" style="margin-top:8px">只是帳號與設備數量的概算，不含職員與行政帳號，授權方案與費用請洽我們。鴻綸科技是 Google for Education Professional Development Partner，可協助評估、導入與教師研習。</p>' +
-      '<a class="sx-btn primary" style="display:inline-block;margin-top:6px;text-decoration:none" href="https://www.hunglun.com/contact" target="_blank" rel="noopener">詢問 ' + esc(s.n) + ' 的導入方案</a></div>';
+    var staff = S.staff(s), st18 = S.stu18(s), noStaff = s.lv === '大專';
+    var stuNote = s.lv === '大專' ? '大專學生年滿 18 歲，可以指派。' : s.lv === '高中職' ? '高中職學生約 ' + Math.round((S.hs18 || 0) * 100) + '% 年滿 18 歲（全國比例，各校會不同），只有這部分可以指派。' : '國小、國中學生未滿 18 歲，不適用 AI Pro for Education，可用學校方案內含的 Gemini for Education。';
+    return '<div class="sx-sec sx-gws"><h3>Google AI Pro for Education 導入規模估算</h3>' +
+      '<p class="sub">AI Pro for Education 是 Workspace for Education 的加購授權，只能指派給 18 歲以上的使用者，授權數是實際要使用的人數。</p>' +
+      '<div class="sx-kpis sx-num"><div class="sx-kpi"><div class="k">教職員（專任教師加職員）</div><div class="v">' + (noStaff ? '無資料' : fmt(staff)) + '</div>' + (noStaff ? '<div class="d">教育部沒有公開，試算頁可自行輸入</div>' : '') + '</div>' +
+      '<div class="sx-kpi"><div class="k">可指派的學生（估）</div><div class="v">' + fmt(st18) + '</div></div>' +
+      '<div class="sx-kpi"><div class="k">潛在授權上限</div><div class="v">' + fmt(staff + st18) + '</div><div class="d">全部人都使用時的上限</div></div></div>' +
+      '<p class="sub" style="margin-top:8px">' + stuNote + '多數學校先從行政與教學團隊開始。這是依公開資料的概算，授權方案與費用請洽我們。</p>' +
+      '<a class="sx-btn primary" style="display:inline-block;margin-top:6px;text-decoration:none" href="/quote/?s=' + s.id + '">試算授權數與產生提案</a></div>';
   }
-
   function drawMetric(s) {
     var vals, vf = fmt, label;
     if (metric === 'st') { vals = s.st; label = '學生數'; }

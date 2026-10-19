@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=13">
-<link rel="stylesheet" href="/stats.css?v=13">
+<link rel="stylesheet" href="/base.css?v=14">
+<link rel="stylesheet" href="/stats.css?v=14">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "找學校", "item": "https://school.hunglun.com/"}, {"@type": "ListItem", "position": 2, "name": "算法說明"}]}</script>
 </head>
 <body class="sx" data-page="static">
@@ -34,8 +34,10 @@
       <a href="/region/">區域排行</a>
       <a href="/national/">全國概況</a>
       <a href="/area/">學校名錄</a>
+      <a href="/leads/">推廣名單</a>
     </nav>
     <span class="hd-sp"></span>
+    <a class="hd-link" href="/quote/">導入試算</a>
     <a class="hd-link" href="/method/">算法說明</a>
     <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
     <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
@@ -70,6 +72,13 @@
 <div style="overflow-x:auto"><table class="sx-tbl"><thead><tr><th></th><th>1 年後</th><th>2 年後</th><th>3 年後</th><th>4 年後</th></tr></thead><tbody><tr><td>國小・世代銜接（本站）</td><td class="sx-num">2.3%</td><td class="sx-num">4.4%</td><td class="sx-num">7.2%</td><td class="sx-num">11.2%</td></tr><tr><td>國小・新生持平</td><td class="sx-num">2.5%</td><td class="sx-num">5.0%</td><td class="sx-num">8.1%</td><td class="sx-num">11.4%</td></tr><tr><td>國中・世代銜接（本站）</td><td class="sx-num">3.6%</td><td class="sx-num">6.9%</td><td class="sx-num">9.2%</td><td class="sx-num">10.3%</td></tr><tr><td>國中・新生持平</td><td class="sx-num">4.3%</td><td class="sx-num">9.4%</td><td class="sx-num">12.3%</td><td class="sx-num">11.1%</td></tr><tr><td>高中職・世代銜接（本站）</td><td class="sx-num">3.9%</td><td class="sx-num">7.0%</td><td class="sx-num">9.4%</td><td class="sx-num">11.9%</td></tr><tr><td>高中職・新生持平</td><td class="sx-num">4.2%</td><td class="sx-num">7.5%</td><td class="sx-num">9.5%</td><td class="sx-num">11.9%</td></tr></tbody></table></div>
 <p class="sub">回測也試過其他做法並淘汰：直接用全國趨勢（比單純持平更差）、加入各校的人數保留率（幾乎沒有改善）、用 3 歲人數（更差）。高中職的世代銜接和持平誤差接近，但全國加總的偏差小得多（3 年後 +1.0% 對 +5.9%）。回測程式在專案裡（tools/backtest.py、tools/backtest-high.py）。</p>
 <p><b>限制：</b>越遠越不準；小型學校誤差比表上更大；不含遷入遷出、學區調整、新建學校；少子化若比歷史更快，推估會偏高。這是人數的簡單推估，不是任何單位對裁併或減班的決定。</p></section>
+
+<section class="sx-card sx-ncard"><h2>Google AI Pro for Education 席次怎麼估</h2>
+<p>規則依 Google 官方說明：AI Pro for Education 是 Workspace for Education 的加購授權，只能指派給 18 歲以上的使用者，授權在管理主控台逐人指派，最少 1 個授權；授權數是實際要使用的人數，教職員要一併編列。</p>
+<ul><li><b>教職員：</b>專任教師加職員，來自教育部校別資料。大專沒有公開教職員數，試算頁讓使用者自己輸入。</li>
+<li><b>可指派的學生：</b>國小、國中學生未滿 18 歲，不計；高中職學生依全國年滿 18 歲的比例估算（目前約 6.1%，各校實際不同）；大專學生全部計入。</li>
+<li><b>潛在席次：</b>以上兩項相加，是「全部人都使用」時的上限。實際授權數是學校實際要使用的人數，所以試算頁可以調整導入比例。</li>
+<li><b>不放價格：</b>官方沒有公開單價，金額依授權人數、訂閱年限與現有 Workspace 版本而定，所以本站不放任何價格，由使用者填入取得的報價再算總額。</li></ul></section>
 
 <section class="sx-card sx-ncard"><h2>白話解讀怎麼寫</h2>
 <p>由程式依規則把資料轉成句子：規模、在同區的排名、和縣市平均比、近五年變化、各年級結構、推估人數、師生比。沒有使用 AI，也沒有人工評論，每個數字都能在資料裡驗算。</p></section>

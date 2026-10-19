@@ -169,12 +169,19 @@ window.SS = (function () {
     return { total: tot, floor: floor };
   };
 
+  /* ---------- Google AI Pro for Education 席次估算 ----------
+     官方規則（Google Workspace 說明）：AI Pro for Education 是加購授權，只能指派給 18 歲以上的使用者，授權數是實際要使用的人數。
+     所以：教職員 = 專任教師 + 職員；可指派的學生 = 大專全部、高中職依全國年滿 18 歲比例估算、國小與國中為 0。 */
+  S.staff = function (s) { return (s.t[0] + s.t[1]) + (s.sf ? s.sf[0] + s.sf[1] : 0); };
+  S.stu18 = function (s) { return s.lv === '大專' ? s.cur : s.lv === '高中職' ? Math.round(s.cur * (S.hs18 || 0)) : 0; };
+  S.potential = function (s) { return S.staff(s) + S.stu18(s); };
+
   /* ---------- 載入資料 ---------- */
   function prepare(d) {
     S.years = d.years; S.latest = d.latest; S.iL = d.years.indexOf(d.latest);
     S.built = d.built;
     S.schools = d.schools;
-    S.gf = d.gf;
+    S.gf = d.gf; S.hs18 = d.hs18 || 0;
     S.byId = {};
     S.futPending = true;
     d.schools.forEach(function (s) {
@@ -183,13 +190,14 @@ window.SS = (function () {
       s.ch5 = s.base ? S.pct(s.cur, s.base) : null;
       s.key = S.norm(s.n).toLowerCase();
       s.fut = null;
+      s.seats = S.potential(s);
       S.byId[s.id] = s;
     });
   }
 
   // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
   S.summaries = function () {
-    if (!S._sum) S._sum = fetch('/summaries.json?v=13').then(function (r) { return r.json(); });
+    if (!S._sum) S._sum = fetch('/summaries.json?v=14').then(function (r) { return r.json(); });
     return S._sum;
   };
 
@@ -200,7 +208,7 @@ window.SS = (function () {
 
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=13').then(function (r) { return r.json(); })];
+    var need = [fetch('/schools.json?v=14').then(function (r) { return r.json(); })];
     if (page === 'national') need.push(fetch('/data.json?v=11').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
       prepare(res[0]); S.nat = res[1]; S.fillFuture();

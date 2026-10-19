@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>(function(){try{var t=localStorage.getItem('hunglun-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();</script>
+<title>推廣名單｜Google AI Pro for Education 潛在席次｜鴻綸科技</title>
+<meta name="description" content="依教職員與可指派學生估算全國每所學校的 Google AI Pro for Education 潛在授權數，標記聯絡進度並匯出名單。">
+<link rel="canonical" href="https://school.hunglun.com/leads/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="推廣名單｜Google AI Pro for Education 潛在席次｜鴻綸科技">
+<meta property="og:description" content="依教職員與可指派學生估算全國每所學校的 Google AI Pro for Education 潛在授權數，標記聯絡進度並匯出名單。">
+<meta property="og:url" content="https://school.hunglun.com/leads/">
+<meta property="og:locale" content="zh_TW">
+<meta name="twitter:card" content="summary">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/base.css?v=14">
+<link rel="stylesheet" href="/stats.css?v=14">
+</head>
+<body class="sx" data-page="leads">
+<a class="skip" href="#main">跳到主要內容</a>
+
+<header class="hd">
+  <div class="wrap">
+    <a class="hd-logo" href="https://www.hunglun.com/" aria-label="鴻綸科技 Hunglun Technology"></a>
+    <nav class="hd-nav" aria-label="功能">
+      <a href="/">找學校</a>
+      <a href="/map/">學校地圖</a>
+      <a href="/region/">區域排行</a>
+      <a href="/national/">全國概況</a>
+      <a href="/area/">學校名錄</a>
+      <a href="/leads/" aria-current="page">推廣名單</a>
+    </nav>
+    <span class="hd-sp"></span>
+    <a class="hd-link" href="/quote/">導入試算</a>
+    <a class="hd-link" href="/method/">算法說明</a>
+    <a class="hd-link" href="https://www.hunglun.com/tools#data-search">更多資料查詢</a>
+    <a class="hd-link" href="https://www.hunglun.com/contact">聯絡我們</a>
+    <button type="button" class="hd-btn" id="themeBtn" aria-label="切換深色或淺色模式">深色模式</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<section class="pg-head pg-slim">
+  <div class="wrap">
+    <nav class="crumbs" aria-label="麵包屑"><a href="/">找學校</a> ／ 推廣名單</nav>
+    <h1>推廣名單</h1>
+    <p class="lead">找出值得優先拜訪的學校：依教職員與可指派學生估算 Google AI Pro for Education 的潛在授權數，標記聯絡進度，匯出名單。</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap">
+    <div class="ld-sum sx-num" id="ldSum" aria-live="polite"></div>
+    <p class="sub ld-rule">潛在席次 = 教職員（專任教師加職員）+ 可指派的學生。AI Pro for Education 只能指派給 18 歲以上的使用者，所以國小、國中學生不計；高中職學生依全國年滿 18 歲的比例估算；大專學生全部計入，但教育部沒有公開大專教職員數。這是全部人都使用時的上限，實際授權數是學校實際要使用的人數。</p>
+    <div class="map-bar">
+      <label class="sx-field map-search"><span>找學校</span><input class="sx-input" id="lQ" type="search" placeholder="輸入校名或地區" autocomplete="off"></label>
+      <label class="sx-field"><span>縣市</span><select id="lCounty"></select></label>
+      <label class="sx-field"><span>鄉鎮市區</span><select id="lDistrict" disabled><option value="">先選縣市</option></select></label>
+      <div class="sx-field"><span>學制</span>
+        <div class="sx-chips"><button type="button" data-llv="" aria-pressed="true">全部</button><button type="button" data-llv="國小" aria-pressed="false">國小</button><button type="button" data-llv="國中" aria-pressed="false">國中</button><button type="button" data-llv="高中職" aria-pressed="false">高中職</button><button type="button" data-llv="大專" aria-pressed="false">大專</button></div></div>
+      <div class="sx-field"><span>公私立</span>
+        <div class="sx-chips"><button type="button" data-lpub="" aria-pressed="true">全部</button><button type="button" data-lpub="1" aria-pressed="false">公立</button><button type="button" data-lpub="0" aria-pressed="false">私立</button></div></div>
+      <label class="sx-field"><span>最低潛在席次</span><select id="lMin"><option value="0">不限</option><option value="30">30 席以上</option><option value="100">100 席以上</option><option value="300">300 席以上</option><option value="1000">1,000 席以上</option></select></label>
+      <label class="sx-field"><span>聯絡進度</span><select id="lStatus"></select></label>
+      <label class="sx-field"><span>排序</span><select id="lSort"><option value="seats">潛在席次：多到少</option><option value="stu">學生數：多到少</option><option value="name">校名</option><option value="status">聯絡進度</option></select></label>
+      <button type="button" class="sx-reset" id="lReset">清除條件</button>
+    </div>
+    <div class="ld-tools">
+      <button type="button" class="sx-btn" id="ldExport">匯出目前名單 CSV</button>
+      <button type="button" class="sx-btn" id="ldExportMarked">匯出已標記進度</button>
+      <label class="sx-btn ld-file">匯入進度 CSV<input type="file" id="ldImport" accept=".csv,text/csv" hidden></label>
+      <button type="button" class="sx-btn" id="ldClear">清除全部進度</button>
+      <span class="sub" id="ldMsg" role="status"></span>
+    </div>
+    <p class="sub" id="ldWarn" hidden>這個瀏覽器無法儲存進度（可能是無痕模式或停用了網站資料），請先匯出 CSV 保存。</p>
+    <p class="sub">聯絡進度與備註只存在這台電腦的這個瀏覽器，不會上傳。換電腦或換瀏覽器前請先「匯出已標記進度」，到另一台再「匯入進度 CSV」。</p>
+    <div style="overflow-x:auto">
+      <table class="sx-tbl ld-table"><thead><tr><th>學校</th><th>教職員</th><th>可指派學生（估）</th><th>潛在席次</th><th>聯絡</th><th>進度</th><th>備註</th><th></th></tr></thead><tbody id="ldBody"></tbody></table>
+    </div>
+    <button type="button" class="sx-more" id="ldMore" hidden></button>
+    <div class="sx-src">
+      <h2>資料來源與說明</h2>
+      <ul>
+        <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>、<a href="https://data.gov.tw/dataset/6238" rel="noopener">高級中等學校校別資料</a>、<a href="https://data.gov.tw/dataset/6089" rel="noopener">一般高級中等學校名錄</a>、<a href="https://data.gov.tw/dataset/6231" rel="noopener">大專院校校別學生數</a>。</li>
+        <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
+        <li>席次依 Google 官方說明（Google AI Pro for Education 限 18 歲以上使用者，授權在管理主控台逐人指派，最少 1 個授權）估算；是推廣用的概算，不是報價，授權價格請以 Google 官方或授權夥伴當期公告為準。</li>
+        <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
+        <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-logo" role="img" aria-label="鴻綸科技 x Google for Education Professional Development Partner"></div>
+    <p>© 2026 鴻綸科技股份有限公司. All Rights Reserved.</p>
+    <p>Hunglun Technology Co., Ltd.　·　<a href="https://www.hunglun.com/">www.hunglun.com</a></p>
+    <p class="legal">本系統之軟體架構、程式碼、視覺設計及文字內容均受著作權法與智慧財產權保護。未經本公司正式書面授權，嚴禁進行任何形式之重製、改作、散布、公開傳輸或商業營利行為，違者將依法追究相關法律責任。</p>
+    <p class="legal">本站不蒐集任何個人資料。統計數字來自教育部公開資料，以教育部公布為準。</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var b=document.getElementById('themeBtn'),r=document.documentElement;
+  function label(){b.textContent=r.getAttribute('data-theme')==='dark'?'淺色模式':'深色模式';}
+  label();
+  b.addEventListener('click',function(){
+    var d=r.getAttribute('data-theme')==='dark';
+    if(d)r.removeAttribute('data-theme');else r.setAttribute('data-theme','dark');
+    try{localStorage.setItem('hunglun-theme',d?'light':'dark');}catch(e){}
+    label();
+  });
+})();
+</script>
+<script src="/core.js?v=14"></script>
+<script src="/leads.js?v=14"></script>
+</body>
+</html>

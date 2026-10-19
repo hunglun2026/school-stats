@@ -202,3 +202,47 @@ code{background:var(--bg-soft);padding:2px 6px;border-radius:4px;word-break:brea
 .sx-method li{margin:5px 0}
 .sx-method p{margin:8px 0}
 .mp-note{font-size:.78rem;color:#92400e;margin-top:4px}
+
+/* 推廣名單與導入試算 */
+.ld-sum{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin-bottom:10px}
+.ld-st span{display:inline-block;margin:2px 12px 2px 0}
+.ld-rule{margin:6px 0 14px}
+.ld-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:10px 0}
+.ld-file{cursor:pointer}
+.ld-table th{white-space:nowrap}
+.ld-table td{vertical-align:top}
+.ld-name small{display:block;color:var(--muted);font-weight:400}
+.ld-ct a{white-space:nowrap}
+.ld-sel,.ld-note{font:inherit;font-size:.88rem;padding:5px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--text);width:100%;min-width:92px;max-width:170px}
+.ld-act a{white-space:nowrap}
+.qt-grid{display:grid;grid-template-columns:320px 1fr;gap:24px;align-items:start}
+.qt-controls{position:sticky;top:80px}
+.qt-pick{display:flex;justify-content:space-between;gap:8px;align-items:center;background:var(--soft);border-radius:8px;padding:8px 12px;font-size:.92rem}
+.qt-n,.qt-plain{width:100%}
+.qt-controls input[type=range]{width:100%}
+.qt-actions{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.qt-kpis{margin-bottom:6px}
+.pp{background:#fff;color:#111;border:1px solid var(--line);border-radius:12px;padding:28px 32px;margin-top:6px;line-height:1.7}
+:root[data-theme="dark"] .pp{background:#fff;color:#111}
+.pp .sx-tbl th,.pp .sx-tbl td{border-bottom-color:#ddd}
+.pp h3{font-size:1.05rem;font-weight:700;margin:20px 0 6px;padding-bottom:4px;border-bottom:2px solid #1b6ca8;color:#0f3d63}
+.pp-head{display:flex;gap:18px;align-items:center;border-bottom:1px solid #ccc;padding-bottom:14px}
+.pp-t{font-size:1.4rem;font-weight:800}
+.pp-s{font-size:1.05rem}
+.pp-d{color:#555;font-size:.88rem}
+.pp ul,.pp ol{margin:6px 0 6px 1.3em}
+.pp li{margin:4px 0}
+.pp-foot{margin-top:22px;padding-top:12px;border-top:1px solid #ccc;font-size:.9rem}
+.pp-note{color:#555;font-size:.82rem}
+@media (max-width:900px){.qt-grid{grid-template-columns:1fr}.qt-controls{position:static}.pp{padding:18px 16px}}
+@media print{
+  .hd,.ft,.no-print,.sx-tray,.pg-head{display:none!important}
+  body{background:#fff!important}
+  .qt-grid{display:block}.section{padding:0}.wrap{max-width:none;padding:0}
+  .pp{border:0;padding:0;margin:0}
+  .sx-src{display:none}
+}
+.sx-field[hidden]{display:none}
+.qt-plain{background-image:none!important;padding-left:12px!important}
+.qt-n{padding:7px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;width:100%}
+.qt-controls .sx-field{gap:5px}

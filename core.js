@@ -197,7 +197,7 @@ window.SS = (function () {
 
   // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
   S.summaries = function () {
-    if (!S._sum) S._sum = fetch('/summaries.json?v=14').then(function (r) { return r.json(); });
+    if (!S._sum) S._sum = fetch('/summaries.json?v=15').then(function (r) { return r.json(); });
     return S._sum;
   };
 
@@ -208,7 +208,7 @@ window.SS = (function () {
 
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=14').then(function (r) { return r.json(); })];
+    var need = [fetch('/schools.json?v=15').then(function (r) { return r.json(); })];
     if (page === 'national') need.push(fetch('/data.json?v=11').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
       prepare(res[0]); S.nat = res[1]; S.fillFuture();

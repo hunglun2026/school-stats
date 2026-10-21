@@ -50,7 +50,7 @@
   function exportCsv() {
     var rows = [['學校', '學制', '公私立', '縣市', '鄉鎮市區', S.latest + '學年度學生數', '班級數', '五年變化(%)', '專任教師', '地址', '電話', '網站']];
     view.forEach(function (s) {
-      rows.push([s.n, S.lvName(s.lv), s.pub ? '公立' : '私立', s.c, s.d, s.cur, s.cl[S.iL], s.ch5 == null ? '' : s.ch5.toFixed(1), s.t[0] + s.t[1], s.a || '', s.tel || '', s.web || '']);
+      rows.push([s.n, S.lvName(s.lv), s.pub ? '公立' : '私立', s.c, s.d, s.cur, s.cl[S.iL], s.ch5 == null ? '' : s.ch5.toFixed(1), s.lv === '大專' ? '' : s.t[0] + s.t[1], s.a || '', s.tel || '', s.web || '']);
     });
     var csv = rows.map(function (r) { return r.map(function (v) { v = String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }).join(','); }).join('\r\n');
     var a = document.createElement('a');
@@ -239,7 +239,8 @@
       (s.lv === '大專' ? '' : '<div class="sx-kpi"><div class="k">專任教師</div><div class="v">' + (tch || '無資料') + '</div><div class="d">' + (tch ? '每位教師對應 ' + (s.cur / tch).toFixed(1) + ' 位學生' : '無資料') + '</div></div>') +
       '<div class="sx-kpi"><div class="k">男女比例</div><div class="v">' + mp + ' : ' + (100 - mp) + '</div><div class="d">男 ' + fmt(males) + '，女 ' + fmt(s.cur - males) + '</div></div></div>' +
       '<div class="sx-sec"><h3>白話解讀</h3><div class="sx-sumtext" id="dSm">載入中…</div><p class="sub">由公開在學人數自動整理，沒有人工評論。</p></div>' +
-      '<div class="sx-sec"><h3>歷年變化</h3><div class="sx-seg" id="dSeg"><button type="button" data-m="st" aria-pressed="true">學生數</button><button type="button" data-m="cl" aria-pressed="false">班級數</button><button type="button" data-m="avg" aria-pressed="false">每班人數</button></div><div class="sx-chart" id="dChart"></div></div>' +
+      '<div class="sx-sec"><h3>歷年變化</h3><div class="sx-seg" id="dSeg"><button type="button" data-m="st" aria-pressed="true">學生數</button><button type="button" data-m="cl" aria-pressed="false">班級數</button><button type="button" data-m="avg" aria-pressed="false">每班人數</button></div><div class="sx-chart" id="dChart"></div>' +
+      (s.pre ? '<p class="sub">' + (s.pre.y - 1) + ' 學年度以前是「' + esc(s.pre.n) + '」的人數（改制、改名或合併前，教育部用舊的學校代碼統計）。</p>' : '') + '</div>' +
       (s.g.length ? '<div class="sx-sec"><h3>各年級男女人數</h3><p class="sub">' + S.latest + ' 學年度</p>' + gradeBars(s) + '</div>' : '') +
       '<div class="sx-sec"><h3>和附近學校比</h3>' + rankBlock(s) + '</div>' +
       projHtml(s) + gwsHtml(s) +

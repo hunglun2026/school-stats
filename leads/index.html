@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=19">
-<link rel="stylesheet" href="/stats.css?v=19">
+<link rel="stylesheet" href="/base.css?v=20">
+<link rel="stylesheet" href="/stats.css?v=20">
 </head>
 <body class="sx" data-page="leads">
 <a class="skip" href="#main">跳到主要內容</a>
@@ -63,7 +63,7 @@
       <label class="sx-field"><span>縣市</span><select id="lCounty"></select></label>
       <label class="sx-field"><span>鄉鎮市區</span><select id="lDistrict" disabled><option value="">先選縣市</option></select></label>
       <div class="sx-field"><span>學制</span>
-        <div class="sx-chips"><button type="button" data-llv="" aria-pressed="true">全部</button><button type="button" data-llv="國小" aria-pressed="false">國小</button><button type="button" data-llv="國中" aria-pressed="false">國中</button><button type="button" data-llv="高中職" aria-pressed="false">高中職</button><button type="button" data-llv="大專" aria-pressed="false">大專院校</button></div></div>
+        <div class="sx-chips"><button type="button" data-llv="" aria-pressed="true">全部</button><button type="button" data-llv="k12" aria-pressed="false" title="國小、國中、高中職（不含大專）">K-12</button><button type="button" data-llv="國小" aria-pressed="false">國小</button><button type="button" data-llv="國中" aria-pressed="false">國中</button><button type="button" data-llv="高中職" aria-pressed="false">高中職</button><button type="button" data-llv="大專" aria-pressed="false">大專院校</button></div></div>
       <div class="sx-field"><span>公私立</span>
         <div class="sx-chips"><button type="button" data-lpub="" aria-pressed="true">全部</button><button type="button" data-lpub="1" aria-pressed="false">公立</button><button type="button" data-lpub="0" aria-pressed="false">私立</button></div></div>
       <label class="sx-field"><span>最低潛在席次</span><select id="lMin"><option value="0">不限</option><option value="30">30 席以上</option><option value="100">100 席以上</option><option value="300">300 席以上</option><option value="1000">1,000 席以上</option></select></label>
@@ -123,7 +123,7 @@
   });
 })();
 </script>
-<script src="/core.js?v=19"></script>
-<script src="/leads.js?v=19"></script>
+<script src="/core.js?v=20"></script>
+<script src="/leads.js?v=20"></script>
 </body>
 </html>

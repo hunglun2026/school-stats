@@ -33,7 +33,7 @@
       '<a href="https://www.google.com/maps/search/?api=1&query=' + mapQ + '" target="_blank" rel="noopener">Google 地圖</a></div></div>';
   }
 
-  function visible(s) { return coords[s.id] && (!st.lv || s.lv === st.lv) && (!st.county || s.c === st.county); }
+  function visible(s) { return coords[s.id] && S.lvOk(s, st.lv) && (!st.county || s.c === st.county); }
 
   function draw() {
     if (layer) layer.remove();

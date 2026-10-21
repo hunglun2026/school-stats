@@ -16,7 +16,7 @@
   function filtered() {
     var qn = S.norm(f.q.trim()).toLowerCase(), min = +f.min;
     var out = S.schools.filter(function (s) {
-      return (!f.lv || s.lv === f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
+      return S.lvOk(s, f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
         (f.pub === '' || String(s.pub) === f.pub) && s.seats >= min && (!f.status || stOf(s.id) === f.status) &&
         (!qn || s.key.indexOf(qn) >= 0 || S.norm(s.c + s.d).indexOf(qn) >= 0);
     });

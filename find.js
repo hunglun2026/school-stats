@@ -11,7 +11,7 @@
   function filtered() {
     var qn = S.norm(f.q.trim()).toLowerCase();
     var out = S.schools.filter(function (s) {
-      return (!f.lv || s.lv === f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
+      return S.lvOk(s, f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
         (f.pub === '' || String(s.pub) === f.pub) && match(s, qn);
     });
     var by = {
@@ -184,7 +184,7 @@
     var cl = s.cl[S.iL], per = cl ? s.cur / cl : 0, end = S.latest + S.HORIZON;
     var kf = Math.min(3, s.g.length / 2 - 1), last = pc.total[S.HORIZON], f3 = pc.floor[kf], h3 = pc.total[3];  // 三年制學校 3 年後現有學生已全部畢業，改看第 kf 年
     var classes = per ? Math.max(1, Math.round(last / per)) : null;
-    var err = s.lv === '國小' ? '約 2%、4%、7%' : '約 4%、7%、9%';
+    var err = s.lv === '國小' ? '約 2%、4%、7%' : s.lv === '國中' ? '約 4%、7%、9%' : '約 4%、7%、10%';
     return '<div class="sx-sec"><h3>未來 ' + S.HORIZON + ' 年推估</h3><p class="sub">現有學生逐年升級，這部分幾乎確定；新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中與高中職看現在更低年級的在學人數），不是單純假設趨勢。</p>' +
       '<div class="sx-chart" id="pChart"></div><div class="sx-legend" id="pLegend"></div>' +
       '<p class="sx-pnote">推估 ' + (S.latest + 3) + ' 學年度約 <b>' + fmt(h3) + ' 人</b>（較今年 ' + S.chg(S.pct(h3, s.cur)) + '），' + end + ' 學年度約 <b>' + fmt(last) + ' 人</b>' + (classes ? '，約 ' + classes + ' 班（以目前每班 ' + per.toFixed(1) + ' 人估）' : '') +

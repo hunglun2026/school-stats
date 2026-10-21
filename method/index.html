@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=19">
-<link rel="stylesheet" href="/stats.css?v=19">
+<link rel="stylesheet" href="/base.css?v=20">
+<link rel="stylesheet" href="/stats.css?v=20">
 <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "找學校", "item": "https://school.hunglun.com/"}, {"@type": "ListItem", "position": 2, "name": "算法說明"}]}</script>
 </head>
 <body class="sx" data-page="static">
@@ -65,12 +65,12 @@
 <li><b>高中職一年級：</b>明年的新生就是現在的國中九年級，後年是八年級，再後年是七年級，第 4 到 6 年是國小六、五、四年級，同樣乘上歷史銜接比，六年內都是已知的。</li>
 <li><b>大專：</b>學制長短不一（二專、四技、碩博士各不相同），而且教育部沒有公開各校各年級與班級資料，所以只提供人數與趨勢，不做未來推估。</li>
 <li><b>落到每所學校：</b>新生數 = 該校近 2 年新生占全國新生的份額 × 預測的全國新生數。沒有一年級的學校（只收高年級）、不足 30 人的學校不參與「未來減少最多」排序。</li></ul>
-<p>目前全國新生預測（單位：人）：高中職一年級 218,829, 256,587, 253,328（第 1 到 3 年後）；國小 164,154, 165,723, 156,465（第 1 到 3 年後）；國中七年級 197,636, 209,030, 205,558。</p></section>
+<p>目前全國新生預測（單位：人）：高中職一年級 176,938, 207,703, 204,841（第 1 到 3 年後）；國小 164,154, 165,723, 156,465（第 1 到 3 年後）；國中七年級 197,636, 209,030, 205,558。</p></section>
 
 <section class="sx-card sx-ncard"><h2>推估準不準：用過去回測</h2>
 <p>把算法放回過去，拿 110 到 113 學年度的資料去預測後來已經發生的學年度，再和實際人數比。下表是全部學校合計的加權平均絕對誤差（誤差總和 ÷ 實際總人數），數字越小越準。</p>
-<div style="overflow-x:auto"><table class="sx-tbl"><thead><tr><th></th><th>1 年後</th><th>2 年後</th><th>3 年後</th><th>4 年後</th></tr></thead><tbody><tr><td>國小・世代銜接（本站）</td><td class="sx-num">2.3%</td><td class="sx-num">4.4%</td><td class="sx-num">7.2%</td><td class="sx-num">11.2%</td></tr><tr><td>國小・新生持平</td><td class="sx-num">2.5%</td><td class="sx-num">5.0%</td><td class="sx-num">8.1%</td><td class="sx-num">11.4%</td></tr><tr><td>國中・世代銜接（本站）</td><td class="sx-num">3.6%</td><td class="sx-num">6.9%</td><td class="sx-num">9.2%</td><td class="sx-num">10.3%</td></tr><tr><td>國中・新生持平</td><td class="sx-num">4.3%</td><td class="sx-num">9.4%</td><td class="sx-num">12.3%</td><td class="sx-num">11.1%</td></tr><tr><td>高中職・世代銜接（本站）</td><td class="sx-num">3.9%</td><td class="sx-num">7.0%</td><td class="sx-num">9.4%</td><td class="sx-num">11.9%</td></tr><tr><td>高中職・新生持平</td><td class="sx-num">4.2%</td><td class="sx-num">7.5%</td><td class="sx-num">9.5%</td><td class="sx-num">11.9%</td></tr></tbody></table></div>
-<p class="sub">回測也試過其他做法並淘汰：直接用全國趨勢（比單純持平更差）、加入各校的人數保留率（幾乎沒有改善）、用 3 歲人數（更差）。高中職的世代銜接和持平誤差接近，但全國加總的偏差小得多（3 年後 +1.0% 對 +5.9%）。回測程式在專案裡（tools/backtest.py、tools/backtest-high.py）。</p>
+<div style="overflow-x:auto"><table class="sx-tbl"><thead><tr><th></th><th>1 年後</th><th>2 年後</th><th>3 年後</th><th>4 年後</th></tr></thead><tbody><tr><td>國小・世代銜接（本站）</td><td class="sx-num">2.3%</td><td class="sx-num">4.4%</td><td class="sx-num">7.2%</td><td class="sx-num">11.2%</td></tr><tr><td>國小・新生持平</td><td class="sx-num">2.5%</td><td class="sx-num">5.0%</td><td class="sx-num">8.1%</td><td class="sx-num">11.4%</td></tr><tr><td>國中・世代銜接（本站）</td><td class="sx-num">3.6%</td><td class="sx-num">6.9%</td><td class="sx-num">9.2%</td><td class="sx-num">10.3%</td></tr><tr><td>國中・新生持平</td><td class="sx-num">4.3%</td><td class="sx-num">9.4%</td><td class="sx-num">12.3%</td><td class="sx-num">11.1%</td></tr><tr><td>高中職・世代銜接（本站）</td><td class="sx-num">4.2%</td><td class="sx-num">7.2%</td><td class="sx-num">9.9%</td><td class="sx-num">12.8%</td></tr><tr><td>高中職・新生持平</td><td class="sx-num">4.6%</td><td class="sx-num">8.2%</td><td class="sx-num">10.4%</td><td class="sx-num">13.5%</td></tr></tbody></table></div>
+<p class="sub">回測也試過其他做法並淘汰：直接用全國趨勢（比單純持平更差）、加入各校的人數保留率（幾乎沒有改善）、用 3 歲人數（更差）。高中職的世代銜接誤差比持平略小，全國加總的偏差則小得多（3 年後 +3.5% 對 +7.9%）。回測程式在專案裡（tools/backtest.py、tools/backtest-high.py）。</p>
 <p><b>限制：</b>越遠越不準；小型學校誤差比表上更大；不含遷入遷出、學區調整、新建學校；少子化若比歷史更快，推估會偏高。這是人數的簡單推估，不是任何單位對裁併或減班的決定。</p></section>
 
 <section class="sx-card sx-ncard"><h2>Google AI Pro for Education 席次怎麼估</h2>
@@ -85,13 +85,13 @@
 
 <section class="sx-card sx-ncard"><h2>地圖位置怎麼比對</h2>
 <p>OpenStreetMap 對台灣門牌的地址搜尋幾乎找不到，所以改用 OpenStreetMap 上學校本身的位置，依序比對：校名與縣市、鄉鎮市區完全相同；校名相近（去掉「市立」「縣立」、國中小寫法、校名含區名）；重名時用門牌路名挑選；附設在高中的國小部、國中部，用所附設學校的位置。比不到的不猜，也會剔除離同區其他學校太遠的結果。</p>
-<div style="overflow-x:auto"><table class="sx-tbl"><thead><tr><th>可信度</th><th>說明</th><th>學校數</th></tr></thead><tbody><tr><td>3　高</td><td class="sx-num">校名完全相同，縣市與鄉鎮市區一致</td><td class="sx-num">3,644</td></tr><tr><td>2　中</td><td class="sx-num">校名相近或用門牌比對推定，地圖彈窗會註明</td><td class="sx-num">344</td></tr><tr><td>1　概略</td><td class="sx-num">附設在高中的學校，位置是所附設的校園</td><td class="sx-num">115</td></tr><tr><td>無座標</td><td class="sx-num">OpenStreetMap 上找不到可靠的對應，不顯示在地圖上</td><td class="sx-num">194</td></tr></tbody></table></div>
-<p class="sub">共 4,103 / 4,297 所有座標（95.5%）。地圖顏色用 5 個等級：減少超過 15%、減少 5% 到 15%、5% 以內、增加 5% 到 15%、增加超過 15%。</p></section>
+<div style="overflow-x:auto"><table class="sx-tbl"><thead><tr><th>可信度</th><th>說明</th><th>學校數</th></tr></thead><tbody><tr><td>3　高</td><td class="sx-num">校名完全相同，縣市與鄉鎮市區一致</td><td class="sx-num">3,644</td></tr><tr><td>2　中</td><td class="sx-num">校名相近或用門牌比對推定，地圖彈窗會註明</td><td class="sx-num">344</td></tr><tr><td>1　概略</td><td class="sx-num">附設在高中的學校，位置是所附設的校園</td><td class="sx-num">115</td></tr><tr><td>無座標</td><td class="sx-num">OpenStreetMap 上找不到可靠的對應，不顯示在地圖上</td><td class="sx-num">170</td></tr></tbody></table></div>
+<p class="sub">共 4,103 / 4,273 所有座標（96.0%）。地圖顏色用 5 個等級：減少超過 15%、減少 5% 到 15%、5% 以內、增加 5% 到 15%、增加超過 15%。</p></section>
 
 <section class="sx-card sx-ncard"><h2>資料更新（維護者）</h2>
-<p>教育部每學年更新一次。更新資料與發布只要一個指令：<code>python -X utf8 tools/publish.py --data "說明"</code>。它會依序：下載最新學年度（自動偵測，不用改年份）、重新計算全國新生預測與各校份額、重新比對地圖座標（需連線 OpenStreetMap，約 2 分鐘）、重新產生 4,297 所學校頁與名錄、推送到網站。只改版面或文字時用 <code>python -X utf8 tools/publish.py "說明"</code>，不重新下載資料。</p></section>
+<p>教育部每學年更新一次。更新資料與發布只要一個指令：<code>python -X utf8 tools/publish.py --data "說明"</code>。它會依序：下載最新學年度（自動偵測，不用改年份）、重新計算全國新生預測與各校份額、重新比對地圖座標（需連線 OpenStreetMap，約 2 分鐘）、重新產生 4,273 所學校頁與名錄、推送到網站。只改版面或文字時用 <code>python -X utf8 tools/publish.py "說明"</code>，不重新下載資料。</p></section>
 
-<p class="sub" style="margin-top:14px">資料快照日期：2026-10-19。</p>
+<p class="sub" style="margin-top:14px">資料快照日期：2026-10-21。</p>
 </div></section>
 </main>
 

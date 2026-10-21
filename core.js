@@ -149,7 +149,7 @@ window.SS = (function () {
      現有學生逐年升級（幾乎確定）。新生人數 = 該校占全國新生的份額 × 預測的全國新生數：
        國小：第 1、2 年用現在 5 歲、4 歲在學人數校正，第 3 年起延續全國一年級近 3 年趨勢
        國中：七年級新生就是現在國小的各年級，六年內幾乎已知
-     回測（用過去預測已發生的學年度）：國小 1/2/3 年誤差約 2.3%/4.4%/7.2%，國中約 3.6%/6.9%/9.2% */
+     回測（用過去預測已發生的學年度）：國小 1/2/3 年誤差約 2.3%/4.4%/7.2%，國中約 3.6%/6.9%/9.2%，高中職約 4.2%/7.2%/9.9% */
   S.HORIZON = 6;
   // mode: 'cohort'＝世代銜接；'flat'＝新生和今年一樣多。回傳 {total:[第0..6年], floor:[...]}，floor 只算目前已在學的學生
   S.project = function (s, mode) {
@@ -174,6 +174,9 @@ window.SS = (function () {
      所以：教職員 = 專任教師 + 職員；可指派的學生 = 大專全部、高中職依全國年滿 18 歲比例估算、國小與國中為 0。 */
   S.staff = function (s) { return (s.t[0] + s.t[1]) + (s.sf ? s.sf[0] + s.sf[1] : 0); };
   S.lvName = function (lv) { return lv === '大專' ? '大專院校' : lv; };
+  // 學制篩選：'' 全部、'k12' 國小到高中職（不含大專；教育部沒有各幼兒園的校別人數）、其餘照學制名稱
+  S.K12 = { '國小': 1, '國中': 1, '高中職': 1 };
+  S.lvOk = function (s, lv) { return !lv || (lv === 'k12' ? !!S.K12[s.lv] : s.lv === lv); };
   S.stu18 = function (s) { return s.lv === '大專' ? s.cur : s.lv === '高中職' ? Math.round(s.cur * (S.hs18 || 0)) : 0; };
   S.potential = function (s) { return S.staff(s) + S.stu18(s); };
 
@@ -198,7 +201,7 @@ window.SS = (function () {
 
   // 白話解讀（約 2MB）只在第一次開學校詳情時才下載
   S.summaries = function () {
-    if (!S._sum) S._sum = fetch('/summaries.json?v=16').then(function (r) { return r.json(); });
+    if (!S._sum) S._sum = fetch('/summaries.json?v=17').then(function (r) { return r.json(); });
     return S._sum;
   };
 
@@ -209,7 +212,7 @@ window.SS = (function () {
 
   S.boot = function () {
     var page = document.body.dataset.page;
-    var need = [fetch('/schools.json?v=16').then(function (r) { return r.json(); })];
+    var need = [fetch('/schools.json?v=17').then(function (r) { return r.json(); })];
     if (page === 'national') need.push(fetch('/data.json?v=11').then(function (r) { return r.json(); }));
     Promise.all(need).then(function (res) {
       prepare(res[0]); S.nat = res[1]; S.fillFuture();

@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=19">
-<link rel="stylesheet" href="/stats.css?v=19">
+<link rel="stylesheet" href="/base.css?v=20">
+<link rel="stylesheet" href="/stats.css?v=20">
 </head>
 <body class="sx" data-page="region">
 <a class="skip" href="#main">跳到主要內容</a>
@@ -58,7 +58,7 @@
   <div class="wrap">
     <div class="sx-controls">
       <div class="sx-field"><span>學制</span>
-        <div class="sx-chips"><button type="button" data-rlv="" aria-pressed="true">全部學制</button><button type="button" data-rlv="國小" aria-pressed="false">國小</button><button type="button" data-rlv="國中" aria-pressed="false">國中</button><button type="button" data-rlv="高中職" aria-pressed="false">高中職</button><button type="button" data-rlv="大專" aria-pressed="false">大專院校</button></div></div>
+        <div class="sx-chips"><button type="button" data-rlv="" aria-pressed="true">全部學制</button><button type="button" data-rlv="k12" aria-pressed="false" title="國小、國中、高中職（不含大專）">K-12</button><button type="button" data-rlv="國小" aria-pressed="false">國小</button><button type="button" data-rlv="國中" aria-pressed="false">國中</button><button type="button" data-rlv="高中職" aria-pressed="false">高中職</button><button type="button" data-rlv="大專" aria-pressed="false">大專院校</button></div></div>
     </div>
     <div class="sx-region">
       <div class="sx-card"><h2>縣市</h2><p class="sub">依學生數排序，右側是近五年變化。</p><ul class="sx-rows" id="regCounties"></ul></div>
@@ -69,9 +69,9 @@
       <ul>
         <li>來源：教育部統計處，於政府資料開放平臺公開：<a href="https://data.gov.tw/dataset/6240" rel="noopener">國民小學校別資料</a>、<a href="https://data.gov.tw/dataset/6239" rel="noopener">國民中學校別資料</a>、<a href="https://data.gov.tw/dataset/6087" rel="noopener">國民小學名錄</a>、<a href="https://data.gov.tw/dataset/6238" rel="noopener">高級中等學校校別資料</a>、<a href="https://data.gov.tw/dataset/6089" rel="noopener">一般高級中等學校名錄</a>、<a href="https://data.gov.tw/dataset/6231" rel="noopener">大專院校校別學生數</a>。</li>
         <li>授權：<a href="https://data.gov.tw/license" rel="noopener">政府資料開放授權條款第 1 版</a>，本頁依條款標示出處。</li>
-        <li>未來推估：現有各年級學生逐年升級（幾乎確定），新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中與高中職看現在更低年級的在學人數），用過去資料回測誤差約 2% 到 9%。不含遷入遷出與學區調整，也不代表任何裁併或減班決定，詳見<a href="/method/">算法說明</a>。</li>
+        <li>未來推估：現有各年級學生逐年升級（幾乎確定），新生人數依「世代銜接」推估（國小看現在 5 歲、4 歲的在學人數，國中與高中職看現在更低年級的在學人數），用過去資料回測誤差約 2% 到 10%。不含遷入遷出與學區調整，也不代表任何裁併或減班決定，詳見<a href="/method/">算法說明</a>。</li>
         <li>導入規模估算只依在學人數與專任教師數粗估，不含價格。</li>
-        <li>範圍：收錄國小、國中、高中職與大專院校。大專沒有班級與各年級資料，所以不做未來推估與班級計算；高中職含進修部（學校）。「五年」指和 5 個學年度前相比。</li>
+        <li>範圍：收錄國小、國中、高中職與大專院校。大專沒有班級與各年級資料，所以不做未來推估與班級計算；高中職含進修部（學校）。「K-12」指國小、國中、高中職，不含大專；教育部沒有公開各幼兒園的校別人數，所以也不含幼兒園。「五年」指和 5 個學年度前相比。</li>
         <li>有些學校附設在高中內，名錄沒有獨立地址，區域會標示為「區域未標示」。</li>
         <li>資料快照日期：<span id="built">--</span>。教育部每學年更新一次，本站隨之重新產生。</li>
         <li>想把你們學校或機關的資料做成這樣的互動頁面，<a href="https://www.hunglun.com/contact">聯絡我們</a>。</li>
@@ -106,7 +106,7 @@
   });
 })();
 </script>
-<script src="/core.js?v=19"></script>
-<script src="/region.js?v=19"></script>
+<script src="/core.js?v=20"></script>
+<script src="/region.js?v=20"></script>
 </body>
 </html>

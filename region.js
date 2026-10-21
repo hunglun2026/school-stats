@@ -20,7 +20,7 @@
   }
 
   function render() {
-    var list = S.schools.filter(function (s) { return !st.lv || s.lv === st.lv; });
+    var list = S.schools.filter(function (s) { return S.lvOk(s, st.lv); });
     var cs = agg(list, function (s) { return s.c; }).sort(function (a, b) { return b.cur - a.cur; });
     if (!st.county || !cs.some(function (a) { return a.k === st.county; })) st.county = cs[0].k;
     var max = cs[0].cur;

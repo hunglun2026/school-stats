@@ -102,8 +102,19 @@
 /* 比較列 */
 .sx-tray{position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:250;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 6px 24px rgba(0,0,0,.25);padding:10px 12px;display:flex;gap:10px;align-items:center;max-width:calc(100vw - 24px);flex-wrap:wrap}
 .sx-tray[hidden]{display:none}
+body.has-tray{padding-bottom:84px}  /* 比較列固定在底部，留空間免得蓋住清單最後幾筆 */
 .sx-pill{display:inline-flex;gap:6px;align-items:center;background:var(--soft);border-radius:999px;padding:4px 6px 4px 12px;font-size:.88rem}
 .sx-pill button{border:0;background:none;width:22px;height:22px;border-radius:50%;line-height:1}
+/* 手機：比較列貼齊底部整條，膠囊排一行可左右滑、長校名截斷，不再浮在中間蓋住半個清單 */
+@media (max-width:560px){
+  .sx-tray{left:8px;right:8px;bottom:8px;transform:none;max-width:none;flex-wrap:nowrap;gap:8px;padding:8px}
+  #trayPills{display:flex;gap:6px;flex:1 1 auto;min-width:0;overflow-x:auto;scrollbar-width:none}
+  #trayPills::-webkit-scrollbar{display:none}
+  .sx-pill{flex:0 0 auto;max-width:62vw;white-space:nowrap}
+  .sx-pn{min-width:0;overflow:hidden;text-overflow:ellipsis}
+  #trayMsg:empty{display:none}
+  .sx-tray .sx-btn{flex:0 0 auto;padding-left:10px;padding-right:10px;white-space:nowrap}
+}
 
 /* 區域排行 */
 .sx-region{display:grid;grid-template-columns:minmax(260px,1fr) minmax(300px,1.3fr);gap:24px;align-items:start}
@@ -136,7 +147,8 @@ button.sx-row:hover,.sx-row[aria-current="true"]{background:var(--soft)}
 }
 @media (max-width:480px){
   .sx-tabs button{padding:8px 14px}
-  .sx-open{grid-template-columns:minmax(0,1fr) auto}
+  .sx-open{grid-template-columns:minmax(0,1fr) auto;gap:10px;padding:12px}
+  .sx-cmp{min-width:0;width:60px;padding:0 4px;font-size:.78rem;white-space:nowrap}  /* 比較鈕縮窄，校名多一點空間 */
   .sx-row{grid-template-columns:4.6em 1fr 6.2em}
   .sx-rk{grid-template-columns:6.4em 1fr 4.2em}
 }

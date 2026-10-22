@@ -93,9 +93,10 @@
   function renderTray() {
     var t = $('tray');
     t.hidden = !cmp.length;
+    document.body.classList.toggle('has-tray', cmp.length > 0);
     $('trayPills').innerHTML = cmp.map(function (id, k) {
       return '<span class="sx-pill"><i style="display:inline-block;width:9px;height:9px;border-radius:50%;background:' + COLORS[k] + '"></i>' +
-        esc(S.byId[id].n) + '<button type="button" data-rm="' + id + '" aria-label="移出比較：' + esc(S.byId[id].n) + '">×</button></span>';
+        '<span class="sx-pn">' + esc(S.byId[id].n) + '</span><button type="button" data-rm="' + id + '" aria-label="移出比較：' + esc(S.byId[id].n) + '">×</button></span>';
     }).join('');
     $('goCmp').disabled = cmp.length < 2;
     $('goCmp').textContent = cmp.length < 2 ? '再選 1 所即可比較' : '比較 ' + cmp.length + ' 所';

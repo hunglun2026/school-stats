@@ -143,7 +143,9 @@
         gap[s.id] = s._g;
       });
     });
-    return out;
+    // 只留跟最像的差不到 1 個字的：「風山國小」只剩同音的鳳山、豐山，不會連海山、中山國小一起列出來
+    var best = Math.min.apply(null, out.map(function (s) { return s._g; }));
+    return out.filter(function (s) { return s._g <= best + 1; });
   };
   // 依吻合程度排序，同一級再依 tie（預設學生數多的在前）
   S.byMatch = function (tie) {

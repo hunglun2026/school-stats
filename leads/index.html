@@ -18,8 +18,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/base.css?v=22">
-<link rel="stylesheet" href="/stats.css?v=22">
+<link rel="stylesheet" href="/base.css?v=23">
+<link rel="stylesheet" href="/stats.css?v=23">
 </head>
 <body class="sx" data-page="leads">
 <a class="skip" href="#main">跳到主要內容</a>
@@ -59,7 +59,7 @@
     <div class="ld-sum sx-num" id="ldSum" aria-live="polite"></div>
     <p class="sub ld-rule">潛在席次 = 教職員（專任教師加職員）+ 可指派的學生。AI Pro for Education 只能指派給 18 歲以上的使用者，所以國小、國中學生不計；高中職學生依全國年滿 18 歲的比例估算；大專學生全部計入，但教育部沒有公開大專教職員數。這是全部人都使用時的上限，實際授權數是學校實際要使用的人數。</p>
     <div class="map-bar">
-      <label class="sx-field map-search"><span>找學校</span><input class="sx-input" id="lQ" type="search" placeholder="輸入校名或地區" autocomplete="off"></label>
+      <label class="sx-field map-search"><span>找學校</span><input class="sx-input" id="lQ" type="search" placeholder="校名、地區或代碼，如：高雄 工商" autocomplete="off"></label>
       <label class="sx-field"><span>縣市</span><select id="lCounty"></select></label>
       <label class="sx-field"><span>鄉鎮市區</span><select id="lDistrict" disabled><option value="">先選縣市</option></select></label>
       <div class="sx-field"><span>學制</span>
@@ -123,7 +123,8 @@
   });
 })();
 </script>
-<script src="/core.js?v=22"></script>
-<script src="/leads.js?v=22"></script>
+<script src="/core.js?v=23"></script>
+<script src="/search.js?v=23"></script>
+<script src="/leads.js?v=23"></script>
 </body>
 </html>

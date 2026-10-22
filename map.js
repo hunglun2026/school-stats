@@ -80,9 +80,9 @@
     });
     var box = $('mQ');
     box.addEventListener('input', function () {
-      var q = S.norm(box.value.trim()).toLowerCase(), r = $('mResults');
-      if (q.length < 1) { r.innerHTML = ''; return; }
-      var hit = S.schools.filter(function (s) { return coords[s.id] && s.key.indexOf(q) >= 0; }).slice(0, 8);
+      var q = box.value.trim(), r = $('mResults');
+      if (!q) { r.innerHTML = ''; return; }
+      var hit = S.search(S.schools.filter(function (s) { return coords[s.id]; }), q).sort(S.byMatch()).slice(0, 8);
       r.innerHTML = hit.length ? hit.map(function (s) { return '<li><button type="button" data-id="' + s.id + '">' + esc(s.n) + '<small>' + esc(s.c + s.d) + '</small></button></li>'; }).join('') : '<li class="mp-none">找不到有座標的學校</li>';
     });
     $('mResults').addEventListener('click', function (e) {

@@ -192,7 +192,6 @@ window.SS = (function () {
       s.cur = s.st[S.iL];
       s.base = s.st[S.iL - 5];
       s.ch5 = s.base ? S.pct(s.cur, s.base) : null;
-      s.key = S.norm(s.n + ' ' + (s.sn || '')).toLowerCase();  // sn＝教育部簡稱（apply-names.py），打簡稱也找得到
       s.fut = null;
       s.seats = S.potential(s);
       S.byId[s.id] = s;

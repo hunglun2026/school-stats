@@ -123,9 +123,9 @@
       });
     });
     $('qS').addEventListener('input', function (e) {
-      var q = S.norm(e.target.value.trim()).toLowerCase(), r = $('qRes');
+      var q = e.target.value.trim(), r = $('qRes');
       if (!q) { r.innerHTML = ''; return; }
-      var hit = S.schools.filter(function (s) { return S.lvOk(s, qlv) && (s.key.indexOf(q) >= 0 || S.norm(s.c + s.d).indexOf(q) >= 0); }).sort(function (a, b) { return b.seats - a.seats; }).slice(0, 8);
+      var hit = S.search(S.schools.filter(function (s) { return S.lvOk(s, qlv); }), q).sort(S.byMatch(function (a, b) { return b.seats - a.seats; })).slice(0, 8);
       r.innerHTML = hit.length ? hit.map(function (s) { return '<li><button type="button" data-id="' + s.id + '">' + esc(s.n) + '<small>' + S.lvName(s.lv) + '・' + esc(s.c + s.d) + '</small></button></li>'; }).join('') : '<li class="mp-none">找不到學校</li>';
     });
     $('qRes').addEventListener('click', function (e) { var b = e.target.closest('[data-id]'); if (b) { $('qRes').innerHTML = ''; setSchool(b.dataset.id); } });

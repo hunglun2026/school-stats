@@ -7,13 +7,11 @@
   function sync() { S.setQuery({ q: f.q, c: f.county, d: f.district, lv: f.lv, pub: f.pub, sort: f.sort === 'big' ? '' : f.sort, s: curId }); }
   var cmp = [], metric = 'st', lastFocus = null, view = [];
 
-  function match(s, qn) { return !qn || s.key.indexOf(qn) >= 0 || S.norm(s.c + s.d).indexOf(qn) >= 0; }
   function filtered() {
-    var qn = S.norm(f.q.trim()).toLowerCase();
-    var out = S.schools.filter(function (s) {
+    var out = S.search(S.schools.filter(function (s) {
       return S.lvOk(s, f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
-        (f.pub === '' || String(s.pub) === f.pub) && match(s, qn);
-    });
+        (f.pub === '' || String(s.pub) === f.pub);
+    }), f.q);
     var by = {
       big: function (a, b) { return b.cur - a.cur; },
       small: function (a, b) { return a.cur - b.cur; },
@@ -22,7 +20,8 @@
       fut: function (a, b) { return (a.fut == null) - (b.fut == null) || a.fut - b.fut; },
       name: function (a, b) { return a.n.localeCompare(b.n, 'zh-Hant'); }
     };
-    return out.sort(by[f.sort]);
+    // 有輸入校名又是預設排序：最吻合的排前面，同一級才比人數
+    return out.sort(f.q.trim() && f.sort === 'big' ? S.byMatch(by.big) : by[f.sort]);
   }
 
   function counties() {
@@ -42,11 +41,6 @@
     sel.value = f.district;
   }
 
-  function hl(name, qn) {
-    var i = qn ? S.norm(name).toLowerCase().indexOf(qn) : -1;
-    return i < 0 ? esc(name) : esc(name.slice(0, i)) + '<mark>' + esc(name.slice(i, i + qn.length)) + '</mark>' + esc(name.slice(i + qn.length));
-  }
-
   function exportCsv() {
     var rows = [['學校', '學制', '公私立', '縣市', '鄉鎮市區', S.latest + '學年度學生數', '班級數', '五年變化(%)', '專任教師', '地址', '電話', '網站']];
     view.forEach(function (s) {
@@ -62,7 +56,7 @@
   function render() {
     sync();
     view = filtered();
-    var qn = S.norm(f.q.trim()).toLowerCase(), total = 0, cur5 = 0, base5 = 0;
+    var total = 0, cur5 = 0, base5 = 0;
     view.forEach(function (s) { total += s.cur; if (s.base) { cur5 += s.cur; base5 += s.base; } });
     $('sum').innerHTML = '<strong>' + fmt(view.length) + ' 所學校</strong><span class="sx-num">合計 ' + fmt(total) + ' 人' +
       (base5 ? '，較 ' + S.years[S.iL - 5] + ' 學年度 ' + S.chg(S.pct(cur5, base5)) : '') + ' <button type="button" class="sx-link" id="exp">匯出清單</button></span>';
@@ -75,7 +69,7 @@
     ul.innerHTML = view.slice(0, f.shown).map(function (s) {
       var on = cmp.indexOf(s.id) >= 0;
       return '<li class="sx-item"><button type="button" class="sx-open" data-id="' + s.id + '">' +
-        '<div><div class="sx-name">' + hl(s.n, qn) + '</div><div class="sx-meta"><span class="sx-tag">' + S.lvName(s.lv) + '</span><span class="sx-tag">' +
+        '<div><div class="sx-name">' + S.mark(s.n, f.q) + '</div><div class="sx-meta"><span class="sx-tag">' + S.lvName(s.lv) + '</span><span class="sx-tag">' +
         (s.pub ? '公立' : '私立') + '</span><span>' + esc(s.c) + ' ' + esc(s.d) + '</span></div></div>' +
         S.spark(s.st.slice(-11)) +
         '<div class="sx-big sx-num"><b>' + fmt(s.cur) + '</b>' + S.chg(s.ch5, '五年') + '</div></button>' +

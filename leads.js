@@ -14,19 +14,18 @@
   function staffOf(s) { return s.lv === '大專' ? null : S.staff(s); }
 
   function filtered() {
-    var qn = S.norm(f.q.trim()).toLowerCase(), min = +f.min;
-    var out = S.schools.filter(function (s) {
+    var min = +f.min;
+    var out = S.search(S.schools.filter(function (s) {
       return S.lvOk(s, f.lv) && (!f.county || s.c === f.county) && (!f.district || s.d === f.district) &&
-        (f.pub === '' || String(s.pub) === f.pub) && s.seats >= min && (!f.status || stOf(s.id) === f.status) &&
-        (!qn || s.key.indexOf(qn) >= 0 || S.norm(s.c + s.d).indexOf(qn) >= 0);
-    });
+        (f.pub === '' || String(s.pub) === f.pub) && s.seats >= min && (!f.status || stOf(s.id) === f.status);
+    }), f.q);
     var by = {
       seats: function (a, b) { return b.seats - a.seats; },
       stu: function (a, b) { return b.cur - a.cur; },
       name: function (a, b) { return a.n.localeCompare(b.n, 'zh-Hant'); },
       status: function (a, b) { return STATUS.indexOf(stOf(a.id)) - STATUS.indexOf(stOf(b.id)) || b.seats - a.seats; }
     };
-    return out.sort(by[f.sort]);
+    return out.sort(f.q.trim() && f.sort === 'seats' ? S.byMatch(by.seats) : by[f.sort]);
   }
 
   function sync() { S.setQuery({ q: f.q, c: f.county, d: f.district, lv: f.lv, pub: f.pub, min: f.min === '0' ? '' : f.min, st: f.status, sort: f.sort === 'seats' ? '' : f.sort }); }

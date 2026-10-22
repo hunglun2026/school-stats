@@ -40,6 +40,7 @@
       s._k = S.canon(s.n) + '|' + S.canon(s.sn || '') + '|' + S.canon(ALIAS[s.id] || '') + '|' + s.id;
       s._p = S.canon(s.c + s.d);
       s._core = S.canon(s.sn || s.n).replace(/^(市立|縣立|私立|國立)/, '');
+      s._f = S.canon(s.sn || s.n) + '|' + S.canon(ALIAS[s.id] || '');  // 模糊比對只跟簡稱、俗稱算距離（全名＝縣市＋簡稱，重複算只會變慢）
       [s.c, s.d].forEach(function (x) { x = S.canon(x).slice(0, -1); if (x.length >= 2) p[x] = 1; });
     });
     places = Object.keys(p).sort(function (a, b) { return b.length - a.length; });
@@ -77,25 +78,28 @@
       return s._g <= 8;  // 中間夾太多字的不算，免得什麼都對到
     });
   }
-  var py = null;  // 字 → 讀音（可能多個），第一次模糊比對才建
-  function sound(a, b) {
-    if (!py) {
-      py = {};
+  var groups = null;  // 字 → 所有同音字（含自己），第一次模糊比對才建
+  function homophones(c) {
+    if (!groups) {
+      groups = {};
       (S.PY || '').split('|').forEach(function (g) {
-        var i = g.indexOf(':'), k = g.slice(0, i), cs = g.slice(i + 1);
-        for (var j = 0; j < cs.length; j++) (py[cs[j]] = py[cs[j]] || []).push(k);
+        var cs = g.slice(g.indexOf(':') + 1);
+        for (var j = 0; j < cs.length; j++) groups[cs[j]] = (groups[cs[j]] || '') + cs;
       });
     }
-    var x = py[a], y = py[b];
-    return !!(x && y && x.some(function (v) { return y.indexOf(v) >= 0; }));
+    var set = {}, cs = groups[c] || '';
+    for (var j = 0; j < cs.length; j++) set[cs[j]] = 1;
+    return set;
   }
-  function cost(a, b) { return a === b ? 0 : sound(a, b) ? 0.3 : 1; }
-  // w 跟 t 裡最像的一段差幾個字（近似子字串的編輯距離，Sellers 演算法；同音字換錯算 0.3）
-  function near(w, t) {
-    var prev = new Array(t.length + 1).fill(0), cur, best;
+  // w 跟 t 裡最像的一段差幾個字（近似子字串的編輯距離，Sellers 演算法）；hom[i]＝w 第 i 個字的同音字，換錯只算 0.3
+  function near(w, hom, t) {
+    var prev = new Array(t.length + 1).fill(0), cur, best, c, a;
     for (var i = 1; i <= w.length; i++) {
-      cur = [i];
-      for (var j = 1; j <= t.length; j++) cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + cost(w[i - 1], t[j - 1]));
+      cur = [i]; a = w[i - 1];
+      for (var j = 1; j <= t.length; j++) {
+        c = t[j - 1];
+        cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (c === a ? 0 : hom[i - 1][c] ? 0.3 : 1));
+      }
       prev = cur;
     }
     best = prev[0];
@@ -103,11 +107,17 @@
     return best;
   }
   function fuzzy(list, ws) {
+    var homs = ws.map(function (w) { return w.split('').map(homophones); });
     return list.filter(function (s) {
-      var t = s._p + '|' + s._k, sum = 0;
+      var t = s._p + '|' + s._k, f = s._f, sum = 0;
       for (var i = 0; i < ws.length; i++) {
         if (t.indexOf(ws[i]) >= 0) continue;
-        var n = ws[i].length, k = n >= 6 ? 2 : n >= 3 ? 1 : n === 2 ? 0.3 : 0, d = k ? near(ws[i], t) : 9;  // 兩個字只容許同音字
+        var n = ws[i].length, k = n >= 6 ? 2 : n >= 3 ? 1 : n === 2 ? 0.3 : 0;  // 兩個字只容許同音字
+        if (!k) return false;
+        // 先數有幾個字根本不在 t 裡：比容錯還多就不用算距離（同音字可能也不在，所以 2 字詞不篩）
+        for (var j = 0, miss = 0; n > 2 && j < n; j++) if (f.indexOf(ws[i][j]) < 0) miss++;
+        if (miss > Math.ceil(k)) return false;
+        var d = near(ws[i], homs[i], f);
         if (d > k) return false;
         sum += d;
       }
